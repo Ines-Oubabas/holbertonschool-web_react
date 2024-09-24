@@ -35,15 +35,15 @@ const director1: Directors = {
 console.log(teacher3);
 console.log(director1);
 
-// Optionally, you can reuse the display function for both Teacher and Directors
+// Function to display teacher or director information
 function displayTeacher(teacher: Teacher): void {
     const body = document.querySelector('body');
     const table = document.createElement('table');
     const row = document.createElement('tr');
 
-    // Create cells for first name and location
+    // Create cells for first initial of first name and location
     const firstNameCell = document.createElement('td');
-    firstNameCell.textContent = teacher.firstName;
+    firstNameCell.textContent = `${teacher.firstName.charAt(0)}.`;  // Use initial of the first name
 
     const locationCell = document.createElement('td');
     locationCell.textContent = teacher.location;
@@ -61,7 +61,20 @@ function displayTeacher(teacher: Teacher): void {
     }
 }
 
-// Call the function to display the teacher and director information (optional)
+// Call the function to display the teacher and director information
 displayTeacher(teacher3);  // Display the teacher info
 displayTeacher(director1); // Display the director info
+
+// Define the interface for the printTeacher function
+interface printTeacherFunction {
+    (firstName: string, lastName: string): string;
+}
+
+// Implement the printTeacher function
+const printTeacher: printTeacherFunction = function (firstName: string, lastName: string): string {
+    return `${firstName.charAt(0)}. ${lastName}`;
+};
+
+// Test the printTeacher function
+console.log(printTeacher("John", "Doe"));  // Should print: J. Doe
 
