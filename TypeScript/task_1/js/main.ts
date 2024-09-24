@@ -14,10 +14,28 @@ const teacher3: Teacher = {
     lastName: 'Doe',
     fullTimeEmployee: false,
     location: 'London',
-    contract: false,  // Example of additional property
+    contract: false  // Example of additional property
 };
 
-// Function to create and display the teacher table
+// Define the Directors interface that extends Teacher
+interface Directors extends Teacher {
+    numberOfReports: number;  // New required field for Directors
+}
+
+// Create a Director object
+const director1: Directors = {
+    firstName: 'John',
+    lastName: 'Doe',
+    location: 'London',
+    fullTimeEmployee: true,
+    numberOfReports: 17
+};
+
+// Log the teacher and director information to the console
+console.log(teacher3);
+console.log(director1);
+
+// Optionally, you can reuse the display function for both Teacher and Directors
 function displayTeacher(teacher: Teacher): void {
     const body = document.querySelector('body');
     const table = document.createElement('table');
@@ -43,6 +61,7 @@ function displayTeacher(teacher: Teacher): void {
     }
 }
 
-// Call the function to display the teacher information
-displayTeacher(teacher3);
+// Call the function to display the teacher and director information (optional)
+displayTeacher(teacher3);  // Display the teacher info
+displayTeacher(director1); // Display the director info
 
