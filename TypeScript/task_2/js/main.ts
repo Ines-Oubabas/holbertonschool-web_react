@@ -1,71 +1,69 @@
-// Define the DirectorInterface
+// DirectorInterface avec les 3 méthodes
 interface DirectorInterface {
-  workFromHome(): string;
-  getCoffeeBreak(): string;
-  workDirectorTasks(): string;
+    workFromHome(): string;
+    getCoffeeBreak(): string;
+    workDirectorTasks(): string;
 }
 
-// Define the TeacherInterface
+// TeacherInterface avec les 3 méthodes
 interface TeacherInterface {
-  workFromHome(): string;
-  getCoffeeBreak(): string;
-  workTeacherTasks(): string;
+    workFromHome(): string;
+    getCoffeeBreak(): string;
+    workTeacherTasks(): string;
 }
 
-// Create a class Director that implements DirectorInterface
+// Classe Director qui implémente DirectorInterface
 class Director implements DirectorInterface {
-  workFromHome(): string {
-    return 'Working from home';
-  }
-
-  getCoffeeBreak(): string {
-    return 'Getting a coffee break';
-  }
-
-  workDirectorTasks(): string {
-    return 'Getting to director tasks';
-  }
+    workFromHome(): string {
+        return "Working from home";
+    }
+    getCoffeeBreak(): string {
+        return "Getting a coffee break";
+    }
+    workDirectorTasks(): string {
+        return "Getting to director tasks";
+    }
 }
 
-// Create a class Teacher that implements TeacherInterface
+// Classe Teacher qui implémente TeacherInterface
 class Teacher implements TeacherInterface {
-  workFromHome(): string {
-    return 'Cannot work from home';
-  }
-
-  getCoffeeBreak(): string {
-    return 'Cannot have a break';
-  }
-
-  workTeacherTasks(): string {
-    return 'Getting to work';
-  }
+    workFromHome(): string {
+        return "Cannot work from home";
+    }
+    getCoffeeBreak(): string {
+        return "Cannot have a break";
+    }
+    workTeacherTasks(): string {
+        return "Getting to work";
+    }
 }
 
-// Function to create employees
+// Fonction createEmployee
 function createEmployee(salary: number | string): Director | Teacher {
-  if (typeof salary === 'number' && salary < 500) {
-    return new Teacher();
-  }
-  return new Director();
+    if (typeof salary === 'number' && salary < 500) {
+        return new Teacher();
+    } else {
+        return new Director();
+    }
 }
 
-// Function to append content to the body
-function appendToBody(content: string): void {
-  const body = document.querySelector('body');
-  if (body) {
-    const paragraph = document.createElement('p');
-    paragraph.textContent = content;
-    body.appendChild(paragraph);
-  }
+// Fonction isDirector pour vérifier si un employé est un directeur
+function isDirector(employee: Director | Teacher): employee is Director {
+    return (employee as Director).workDirectorTasks !== undefined;
 }
 
-// Log and display the results of createEmployee
-console.log(createEmployee(200));
-appendToBody(createEmployee(200).constructor.name);
+// Fonction executeWork pour appeler la tâche appropriée en fonction de l'employé
+function executeWork(employee: Director | Teacher): void {
+    const resultElement = document.createElement('p');  // Créer un élément <p>
+    if (isDirector(employee)) {
+        resultElement.textContent = employee.workDirectorTasks();
+    } else {
+        resultElement.textContent = employee.workTeacherTasks();
+    }
+    document.body.appendChild(resultElement);  // Ajouter l'élément <p> au body
+}
 
-console.log(createEmployee(1000));
-appendToBody(createEmployee(1000).constructor.name);
-
-console.log(createEmployee('$500'));
-appendToBody(createEmployee('$500').constructor.name);
+// Tests
+executeWork(createEmployee(200)); // Getting to work
+executeWork(createEmployee(1000)); // Getting to director tasks
+executeWork(createEmployee('$500')); // Getting to director tasks
