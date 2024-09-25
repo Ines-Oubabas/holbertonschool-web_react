@@ -1,4 +1,4 @@
-// Define the Teacher interface
+// Interface pour Teacher
 interface Teacher {
     readonly firstName: string;
     readonly lastName: string;
@@ -8,21 +8,21 @@ interface Teacher {
     [key: string]: any;  // Index signature for additional properties
 }
 
-// Create a Teacher object
+// Interface Directors qui étend Teacher
+interface Directors extends Teacher {
+    numberOfReports: number;  // New required field for Directors
+}
+
+// Création d'un objet Teacher
 const teacher3: Teacher = {
     firstName: 'John',
     lastName: 'Doe',
     fullTimeEmployee: false,
     location: 'London',
-    contract: false  // Example of additional property
+    contract: false  // Exemple d'une propriété supplémentaire
 };
 
-// Define the Directors interface that extends Teacher
-interface Directors extends Teacher {
-    numberOfReports: number;  // New required field for Directors
-}
-
-// Create a Director object
+// Création d'un objet Director
 const director1: Directors = {
     firstName: 'John',
     lastName: 'Doe',
@@ -31,50 +31,86 @@ const director1: Directors = {
     numberOfReports: 17
 };
 
-// Log the teacher and director information to the console
-console.log(teacher3);
-console.log(director1);
-
-// Function to display teacher or director information
+// Fonction pour afficher les informations d'un Teacher ou Director
 function displayTeacher(teacher: Teacher): void {
     const body = document.querySelector('body');
     const table = document.createElement('table');
     const row = document.createElement('tr');
 
-    // Create cells for first initial of first name and location
+    // Créer des cellules pour le prénom et la localisation
     const firstNameCell = document.createElement('td');
-    firstNameCell.textContent = `${teacher.firstName.charAt(0)}.`;  // Use initial of the first name
+    firstNameCell.textContent = `${teacher.firstName.charAt(0)}.`;  // Utilise l'initiale du prénom
 
     const locationCell = document.createElement('td');
     locationCell.textContent = teacher.location;
 
-    // Append cells to row
+    // Ajouter les cellules à la ligne
     row.appendChild(firstNameCell);
     row.appendChild(locationCell);
 
-    // Append row to table
+    // Ajouter la ligne au tableau
     table.appendChild(row);
 
-    // Append table to the body
+    // Ajouter le tableau au body
     if (body) {
         body.appendChild(table);
     }
 }
 
-// Call the function to display the teacher and director information
-displayTeacher(teacher3);  // Display the teacher info
-displayTeacher(director1); // Display the director info
+// Afficher les informations des objets Teacher et Director
+displayTeacher(teacher3);  // Affiche les informations de teacher3
+displayTeacher(director1); // Affiche les informations de director1
 
-// Define the interface for the printTeacher function
+// Interface pour la fonction printTeacher
 interface printTeacherFunction {
     (firstName: string, lastName: string): string;
 }
 
-// Implement the printTeacher function
+// Implémentation de la fonction printTeacher
 const printTeacher: printTeacherFunction = function (firstName: string, lastName: string): string {
     return `${firstName.charAt(0)}. ${lastName}`;
 };
 
-// Test the printTeacher function
-console.log(printTeacher("John", "Doe"));  // Should print: J. Doe
+// Test de la fonction printTeacher
+console.log(printTeacher("John", "Doe"));  // Affiche : "J. Doe"
+
+// Interface pour le constructeur de StudentClass
+interface StudentConstructor {
+    new (firstName: string, lastName: string): StudentClassInterface;
+}
+
+// Interface pour la classe StudentClass
+interface StudentClassInterface {
+    firstName: string;
+    lastName: string;
+    workOnHomework(): string;
+    displayName(): string;
+}
+
+// Classe StudentClass qui implémente l'interface StudentClassInterface
+class StudentClass implements StudentClassInterface {
+    firstName: string;
+    lastName: string;
+
+    constructor(firstName: string, lastName: string) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    // Méthode qui retourne "Currently working"
+    workOnHomework(): string {
+        return "Currently working";
+    }
+
+    // Méthode qui retourne le prénom (firstName)
+    displayName(): string {
+        return this.firstName;
+    }
+}
+
+// Test de la classe StudentClass
+const student = new StudentClass("John", "Doe");
+
+console.log(student.displayName());  // Affiche : "John"
+console.log(student.workOnHomework());  // Affiche : "Currently working"
 
