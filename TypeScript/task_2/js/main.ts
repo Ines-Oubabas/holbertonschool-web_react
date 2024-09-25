@@ -1,69 +1,100 @@
-// DirectorInterface avec les 3 méthodes
 interface DirectorInterface {
-    workFromHome(): string;
-    getCoffeeBreak(): string;
-    workDirectorTasks(): string;
+  workFromHome(): string;
+  getCoffeeBreak(): string;
+  workDirectorTasks(): string;
 }
 
-// TeacherInterface avec les 3 méthodes
 interface TeacherInterface {
-    workFromHome(): string;
-    getCoffeeBreak(): string;
-    workTeacherTasks(): string;
+  workFromHome(): string;
+  getCoffeeBreak(): string;
+  workTeacherTasks(): string;
 }
 
-// Classe Director qui implémente DirectorInterface
 class Director implements DirectorInterface {
-    workFromHome(): string {
-        return "Working from home";
-    }
-    getCoffeeBreak(): string {
-        return "Getting a coffee break";
-    }
-    workDirectorTasks(): string {
-        return "Getting to director tasks";
-    }
+  workFromHome(): string {
+    return "Working from home";
+  }
+  getCoffeeBreak(): string {
+    return "Getting a coffee break";
+  }
+  workDirectorTasks(): string {
+    return "Getting to director tasks";
+  }
 }
 
-// Classe Teacher qui implémente TeacherInterface
 class Teacher implements TeacherInterface {
-    workFromHome(): string {
-        return "Cannot work from home";
-    }
-    getCoffeeBreak(): string {
-        return "Cannot have a break";
-    }
-    workTeacherTasks(): string {
-        return "Getting to work";
-    }
+  workFromHome(): string {
+    return "Cannot work from home";
+  }
+  getCoffeeBreak(): string {
+    return "Cannot have a break";
+  }
+  workTeacherTasks(): string {
+    return "Getting to work";
+  }
 }
 
-// Fonction createEmployee
 function createEmployee(salary: number | string): Director | Teacher {
-    if (typeof salary === 'number' && salary < 500) {
-        return new Teacher();
-    } else {
-        return new Director();
-    }
+  if (typeof salary === "number" && salary < 500) {
+    return new Teacher();
+  } else {
+    return new Director();
+  }
 }
 
-// Fonction isDirector pour vérifier si un employé est un directeur
+// Functions for Part 6
 function isDirector(employee: Director | Teacher): employee is Director {
-    return (employee as Director).workDirectorTasks !== undefined;
+  return (employee as Director).workDirectorTasks !== undefined;
 }
 
-// Fonction executeWork pour appeler la tâche appropriée en fonction de l'employé
 function executeWork(employee: Director | Teacher): void {
-    const resultElement = document.createElement('p');  // Créer un élément <p>
-    if (isDirector(employee)) {
-        resultElement.textContent = employee.workDirectorTasks();
-    } else {
-        resultElement.textContent = employee.workTeacherTasks();
-    }
-    document.body.appendChild(resultElement);  // Ajouter l'élément <p> au body
+  if (isDirector(employee)) {
+    console.log(employee.workDirectorTasks());
+    displayResult(employee.workDirectorTasks());
+  } else {
+    console.log(employee.workTeacherTasks());
+    displayResult(employee.workTeacherTasks());
+  }
 }
 
-// Tests
-executeWork(createEmployee(200)); // Getting to work
-executeWork(createEmployee(1000)); // Getting to director tasks
-executeWork(createEmployee('$500')); // Getting to director tasks
+// Function for Part 7
+type Subjects = "Math" | "History";
+
+function teachClass(todayClass: Subjects): string {
+  if (todayClass === "Math") {
+    return "Teaching Math";
+  } else {
+    return "Teaching History";
+  }
+}
+
+// Utility function to display results in the body of the page
+function displayResult(result: string): void {
+  const body = document.querySelector('body');
+  const p = document.createElement('p');
+  p.textContent = result;
+  if (body) {
+    body.appendChild(p);
+  }
+}
+
+// Testing Part 5
+const employee1 = createEmployee(200);
+const employee2 = createEmployee(1000);
+const employee3 = createEmployee('$500');
+
+console.log(employee1);
+console.log(employee2);
+console.log(employee3);
+
+executeWork(employee1);
+executeWork(employee2);
+executeWork(employee3);
+
+// Testing Part 7
+console.log(teachClass('Math'));
+console.log(teachClass('History'));
+
+displayResult(teachClass('Math'));
+displayResult(teachClass('History'));
+
