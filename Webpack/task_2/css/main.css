@@ -1,0 +1,21 @@
+/* Logo 200x200 tout en haut, image de fond optimisée via file-loader */
+#logo {
+  width: 200px;
+  height: 200px;
+  background-image: url("../assets/holberton-logo.jpg");
+  background-repeat: no-repeat;
+  background-size: 200px 200px; /* largeur x hauteur */
+  background-position: center center;
+  margin-bottom: 16px;
+}
+
+/* Bouton + compteur sur une ligne, compteur à droite et en gras */
+.controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#count {
+  font-weight: bold;
+}
