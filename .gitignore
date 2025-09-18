@@ -1,4 +1,20 @@
-/node_modules
-/task_0/node_modules
-/task_1/node_modules
-package-lock.json
+# Ignorer tous les node_modules de n'importe quel sous-dossier
+**/node_modules/
+
+# Webpack — ignorer uniquement les bundles générés (garder les HTML)
+Webpack/task_0/dist/main.js
+Webpack/task_1/public/bundle.js
+Webpack/task_2/public/bundle.js
+Webpack/task_3/public/*.bundle.js
+
+# Typescript — exemples de sorties à ignorer (adapte selon ton projet TS)
+
+
+# Logs / OS / IDE
+npm-debug.log*
+yarn-*.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
