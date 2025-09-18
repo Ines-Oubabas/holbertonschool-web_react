@@ -7,6 +7,8 @@ Webpack/task_1/public/bundle.js
 Webpack/task_2/public/bundle.js
 Webpack/task_2/public/assets/
 Webpack/task_3/public/*.bundle.js
+Webpack/task_3/public/
+
 
 # Typescript — exemples de sorties à ignorer (adapte selon ton projet TS)
 

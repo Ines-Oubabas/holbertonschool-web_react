@@ -1,0 +1,9 @@
+.controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 16px;
+}
+#count {
+  font-weight: bold; /* demandé : en gras, à droite du bouton */
+}
