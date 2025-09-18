@@ -4,7 +4,7 @@
   "private": true,
   "description": "Holberton Webpack task 1",
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack"
   },
   "dependencies": {
     "jquery": "^3.7.1",
