@@ -2,7 +2,6 @@ import logo from './assets/holberton-logo.jpg';
 import './App.css';
 
 function App() {
-  const year = new Date().getFullYear();
 
   return (
     <div className="App">
@@ -14,7 +13,7 @@ function App() {
         <p>Login to access the full dashboard</p>
       </div>
       <div className="App-footer">
-        <p>Copyright {year} - holberton School</p>
+        <p>Copyright {new Date().getFullYear()} - holberton School</p>
       </div>
     </div>
   );
