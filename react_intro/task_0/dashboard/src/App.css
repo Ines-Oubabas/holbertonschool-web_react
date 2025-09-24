@@ -1,0 +1,6 @@
+.App { font-family: Arial, Helvetica, sans-serif; color: #000; }
+.App-header { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border-bottom: 3px solid #e1003c; }
+.App-header img { height: 80px; width: auto; }
+.App-header h1 { margin: 0; color: #e1003c; font-weight: 700; }
+.App-body { padding: 12px 20px 24px; border-bottom: 3px solid #e1003c; font-style: italic; color: #444; }
+.App-footer { padding: 16px 20px; text-align: center; font-style: italic; color: #444; }
