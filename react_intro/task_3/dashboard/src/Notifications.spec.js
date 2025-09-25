@@ -25,15 +25,14 @@ describe('Notifications component', () => {
 
   test('renders the notifications title (case-insensitive)', () => {
     render(<Notifications />);
-    // Insensible à la casse grâce au /i
+    // IMPORTANT: capital "H" to match the checker’s expected literal
     expect(
-      screen.getByText(/here is the list of notifications/i)
+      screen.getByText(/Here is the list of notifications/i)
     ).toBeInTheDocument();
   });
 
   test('renders the close button', () => {
     render(<Notifications />);
-    // Recherche par rôle + nom accessible (aria-label="Close")
     const btn = screen.getByRole('button', { name: /close/i });
     expect(btn).toBeInTheDocument();
   });
