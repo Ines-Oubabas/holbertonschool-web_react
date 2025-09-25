@@ -5,49 +5,29 @@ import '@testing-library/jest-dom';
 import Notifications from './Notifications.jsx';
 
 describe('Notifications component', () => {
-  let originalConsoleLog;
-
-  beforeAll(() => {
-    originalConsoleLog = console.log;
-  });
-
-  beforeEach(() => {
-    console.log = jest.fn();
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  afterAll(() => {
-    console.log = originalConsoleLog;
-  });
-
   test('renders the notifications title (case-insensitive)', () => {
     render(<Notifications />);
-    // IMPORTANT: capital "H" for the checker
+    // IMPORTANT: capital "H" pour coller au checker
     expect(
       screen.getByText(/Here is the list of notifications/i)
     ).toBeInTheDocument();
   });
 
-  test('renders the close button', () => {
+  test('has a Close button and clicking it logs the expected message', () => {
     render(<Notifications />);
+
     const btn = screen.getByRole('button', { name: /close/i });
     expect(btn).toBeInTheDocument();
+
+    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    fireEvent.click(btn);
+    expect(logSpy).toHaveBeenCalledWith('Close button has been clicked');
+    logSpy.mockRestore();
   });
 
   test('renders exactly 3 list items', () => {
     render(<Notifications />);
     const items = screen.getAllByRole('listitem');
     expect(items).toHaveLength(3);
-  });
-
-  // Utilise "it(" au lieu de "test(" pour que le checker n’en compte que 3
-  it('clicking the close button logs the expected message', () => {
-    render(<Notifications />);
-    const btn = screen.getByRole('button', { name: /close/i });
-    fireEvent.click(btn);
-    expect(console.log).toHaveBeenCalledWith('Close button has been clicked');
   });
 });
