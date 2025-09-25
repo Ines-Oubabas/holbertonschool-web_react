@@ -3,17 +3,19 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import Notifications from './Notifications.jsx';
 
 describe('Notifications list', () => {
-  test('shows the header text "Here is the list of notifications"', () => {
+  test('shows the header text "Here is the list of notifications" (case/whitespace-insensitive)', () => {
     render(<Notifications />);
+    // Tolère la casse et des espaces multiples
     expect(
-      screen.getByText(/here is the list of notifications/i)
+      screen.getByText(/\bhere\s+is\s+the\s+list\s+of\s+notifications\b/i)
     ).toBeInTheDocument();
   });
 
   test('has a Close button in the notifications', () => {
     render(<Notifications />);
-    // aria-label="Close" sur le bouton → on le retrouve par son rôle + name
-    expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /close/i })
+    ).toBeInTheDocument();
   });
 
   test('renders exactly 3 list items', () => {
