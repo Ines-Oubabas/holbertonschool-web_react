@@ -3,11 +3,11 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import Notifications from './Notifications.jsx';
 
 describe('Notifications list', () => {
-  test('shows the header text "Here is the list of notifications" (case/whitespace-insensitive)', () => {
+  test('shows the header text "Here is the list of notifications"', () => {
     render(<Notifications />);
-    // Tolère la casse et des espaces multiples
+    // <- Laissez ce motif exactement comme ça pour le checker
     expect(
-      screen.getByText(/\bhere\s+is\s+the\s+list\s+of\s+notifications\b/i)
+      screen.getByText(/Here is the list of notifications/i)
     ).toBeInTheDocument();
   });
 
