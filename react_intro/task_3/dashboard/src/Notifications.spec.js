@@ -11,7 +11,7 @@ describe('Notifications component', () => {
     expect(
       screen.getByText(/Here is the list of notifications/i)
     ).toBeInTheDocument();
-    // Bouton Close : insensible à la casse
+    // Bouton Close
     expect(
       screen.getByRole('button', { name: /close/i })
     ).toBeInTheDocument();
@@ -23,8 +23,10 @@ describe('Notifications component', () => {
   });
 
   test('clicking the close button triggers the console log', () => {
-    // IMPORTANT : aucune assertion ici.
+    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
     render(<Notifications />);
     fireEvent.click(screen.getByRole('button', { name: /close/i }));
+    expect(logSpy).toHaveBeenCalledWith('Close button has been clicked');
+    logSpy.mockRestore();
   });
 });
