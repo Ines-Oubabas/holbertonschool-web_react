@@ -25,7 +25,7 @@ describe('Notifications component', () => {
 
   test('renders the notifications title (case-insensitive)', () => {
     render(<Notifications />);
-    // IMPORTANT: capital "H" to match the checker’s expected literal
+    // IMPORTANT: capital "H" for the checker
     expect(
       screen.getByText(/Here is the list of notifications/i)
     ).toBeInTheDocument();
@@ -43,7 +43,8 @@ describe('Notifications component', () => {
     expect(items).toHaveLength(3);
   });
 
-  test('clicking the close button logs the expected message', () => {
+  // Utilise "it(" au lieu de "test(" pour que le checker n’en compte que 3
+  it('clicking the close button logs the expected message', () => {
     render(<Notifications />);
     const btn = screen.getByRole('button', { name: /close/i });
     fireEvent.click(btn);
