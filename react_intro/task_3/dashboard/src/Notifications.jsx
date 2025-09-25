@@ -1,4 +1,4 @@
-// task_2/dashboard/src/Notifications.jsx
+// task_3/dashboard/src/Notifications.jsx
 import React from 'react';
 import './Notifications.css';
 import closeIcon from './assets/close-button.png';
@@ -13,13 +13,13 @@ export default function Notifications() {
         type="button"
         aria-label="Close"
         onClick={handleClose}
-        // style inline comme demandé (pas de CSS fichier)
+        // style inline, comme demandé (pas via .css)
         style={{
           float: 'right',
           background: 'transparent',
           border: 'none',
           cursor: 'pointer',
-          lineHeight: 0
+          lineHeight: 0,
         }}
         title="Close"
       >
@@ -31,7 +31,11 @@ export default function Notifications() {
       <ul>
         <li data-priority="default">New course available</li>
         <li data-priority="urgent">New resume available</li>
-        <li dangerouslySetInnerHTML={{ __html: getLatestNotification() }} />
+        {/* dernier item injecté en HTML + marqué urgent pour la couleur */}
+        <li
+          data-priority="urgent"
+          dangerouslySetInnerHTML={{ __html: getLatestNotification() }}
+        />
       </ul>
     </div>
   );
