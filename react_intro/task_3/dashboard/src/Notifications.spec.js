@@ -2,7 +2,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Notifications from './Notifications.jsx';
+import Notifications from './Notifications';
 
 describe('Notifications component', () => {
   test('renders the notifications title (case-insensitive)', () => {
