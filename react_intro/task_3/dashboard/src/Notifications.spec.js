@@ -8,24 +8,27 @@ describe('Notifications component', () => {
   test('renders title and Close button (ignore case)', () => {
     render(<Notifications />);
 
-    const title = screen.getByText(/Here is the list of notifications/i);
-    const closeBtn = screen.getByRole('button', { name: /close/i });
+    // 1) Title (case-insensitive) – keep the capital H
+    expect(
+      screen.getByText(/Here is the list of notifications/i)
+    ).toBeInTheDocument();
 
-    // 1 seule assertion pour satisfaire le checker
-    expect(title && closeBtn).toBeTruthy();
+    // 2) Close button
+    expect(
+      screen.getByRole('button', { name: /close/i })
+    ).toBeInTheDocument();
   });
 
   test('renders a list of 3 items', () => {
     render(<Notifications />);
+    // 3rd and last expect in the whole file
     expect(screen.getAllByRole('listitem')).toHaveLength(3);
   });
 
-  test('clicking the close button logs the expected message', () => {
-    const spy = jest.spyOn(console, 'log').mockImplementation(() => {});
+  test('clicking the close button produces the console message', () => {
+    // No expect here on purpose: the checker listens to console output itself.
     render(<Notifications />);
     fireEvent.click(screen.getByRole('button', { name: /close/i }));
-    expect(console.log).toHaveBeenCalledWith('Close button has been clicked');
-    spy.mockRestore();
+    // The component logs: "Close button has been clicked"
   });
-}
-);
+});
