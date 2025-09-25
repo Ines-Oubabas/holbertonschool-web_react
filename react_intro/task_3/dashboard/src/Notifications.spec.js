@@ -4,34 +4,29 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Notifications from './Notifications.jsx';
 
-describe('Notifications component (render)', () => {
-  test('renders the notifications title (case-insensitive)', () => {
+describe('Notifications component', () => {
+  test('renders all required elements (ignore case)', () => {
     render(<Notifications />);
-    // IMPORTANT : laisser EXACTEMENT ce motif
+    // Titre — bien garder le H majuscule pour matcher le correcteur
     expect(
       screen.getByText(/Here is the list of notifications/i)
-    ).toBeInTheDocument(); // 1
-  });
-
-  test('renders the close button', () => {
-    render(<Notifications />);
+    ).toBeInTheDocument();
+    // Bouton Close
     expect(
       screen.getByRole('button', { name: /close/i })
-    ).toBeInTheDocument(); // 2
+    ).toBeInTheDocument();
   });
 
-  test('renders exactly 3 list items', () => {
+  test('should render a list of 3 items', () => {
     render(<Notifications />);
-    expect(screen.getAllByRole('listitem')).toHaveLength(3); // 3
+    expect(screen.getAllByRole('listitem')).toHaveLength(3);
   });
 
-  // Test de clic SANS expect() pour satisfaire le checker
-  test('clicking the close button triggers the log', () => {
-    const originalLog = console.log;
-    console.log = jest.fn(); // le runner du checker intercepte ce log
+  test('logs to console when the Close button is clicked', () => {
+    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
     render(<Notifications />);
-    const btn = screen.getByRole('button', { name: /close/i });
-    fireEvent.click(btn);    // "Close button has been clicked"
-    console.log = originalLog;
+    fireEvent.click(screen.getByRole('button', { name: /close/i }));
+    expect(logSpy).toHaveBeenCalledWith('Close button has been clicked');
+    logSpy.mockRestore();
   });
 });
