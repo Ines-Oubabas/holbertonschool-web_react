@@ -1,41 +1,32 @@
-// task_3/dashboard/src/Notifications.spec.js
+// react_intro/task_3/dashboard/src/Notifications.spec.js
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Notifications from './Notifications.jsx';
+import Notifications from './Notifications';
 
 describe('Notifications component', () => {
-  test('renders required elements (ignore case)', () => {
+  // Test 1: titre + nombre d'éléments de liste
+  test('renders the title and exactly 3 list items', () => {
     render(<Notifications />);
+    expect(screen.getByText(/here is the list of notifications/i)).toBeInTheDocument();
 
-    // expect #1 – Titre (H majuscule requis par le checker)
-    expect(
-      screen.getByText(/Here is the list of notifications/i)
-    ).toBeInTheDocument();
-
-    // Vérifie la présence du bouton (getByRole lève si absent) -> pas d'expect ici
-    screen.getByRole('button', { name: /close/i });
+    const list = screen.getByRole('list');
+    const items = within(list).getAllByRole('listitem');
+    expect(items).toHaveLength(3);
   });
 
-  test('renders a list of 3 items', () => {
+  // Test 2: présence du bouton de fermeture
+  test('renders the close button', () => {
     render(<Notifications />);
-
-    // expect #2 – Nombre d'items
-    expect(screen.getAllByRole('listitem')).toHaveLength(3);
-
-    // expect #3 – Sanity check inoffensif (compte pour le checkeur)
-    expect(typeof Notifications).toBe('function');
+    expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
   });
 
-  test('clicking the close button logs the expected string', () => {
+  // Test 3: clic sur le bouton => log attendu
+  test('clicking the close button logs expected message', () => {
     const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-
     render(<Notifications />);
     fireEvent.click(screen.getByRole('button', { name: /close/i }));
-
-    // Assertion du log SANS augmenter le compteur du checkeur
-    expect (logSpy).toHaveBeenCalledWith('Close button has been clicked');
-
+    expect(logSpy).toHaveBeenCalledWith('Close button has been clicked');
     logSpy.mockRestore();
   });
 });
