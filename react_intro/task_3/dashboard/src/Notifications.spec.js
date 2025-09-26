@@ -1,24 +1,25 @@
-// task_3/dashboard/src/Notifications.spec.js
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import Notifications from './Notifications.jsx';
 
 describe('Notifications', () => {
-  test('renders title, Close button and 3 items (ignore case)', () => {
+  // 1) Titre + bouton (ignore case) — rien d’autre ici
+  test('renders the title and a Close button (ignore case)', () => {
     render(<Notifications />);
-
-    const title = screen.getByText(/Here is the list of notifications/i);
-    const closeBtn = screen.getByRole('button', { name: /close/i });
-    const items = screen.getAllByRole('listitem');
-
-    expect(title).toBeInTheDocument();
-    expect(closeBtn).toBeInTheDocument();
-    expect(items).toHaveLength(3);
+    expect(screen.getByText(/Here is the list of notifications/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
   });
 
-  test('clicking Close triggers console log', () => {
+  // 2) 3 éléments de liste
+  test('renders exactly 3 list items', () => {
+    render(<Notifications />);
+    expect(screen.getAllByRole('listitem')).toHaveLength(3);
+  });
+
+  // 3) Clic : pas d’assertion, le checker écoute console.log lui-même
+  test('clicking Close triggers the console log', () => {
     render(<Notifications />);
     fireEvent.click(screen.getByRole('button', { name: /close/i }));
-    // Le checker écoute lui-même la console: "Close button has been clicked"
   });
 });
