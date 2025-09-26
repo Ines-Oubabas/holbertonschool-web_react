@@ -8,7 +8,7 @@ describe('Notifications', () => {
     render(<Notifications />);
     const title = screen.getByText(/Here is the list of notifications/i);
     const closeBtn = screen.getByRole('button', { name: /close/i });
-    // single assertion for both elements
+    // 1 seul expect pour les deux éléments
     expect(Boolean(title && closeBtn)).toBe(true);
   });
 
@@ -20,7 +20,8 @@ describe('Notifications', () => {
   test('clicking Close logs to console', () => {
     const spy = jest.spyOn(console, 'log').mockImplementation(() => {});
     render(<Notifications />);
-    fireEvent.click(screen.getByRole('button', { name: /close/i }));
+    // ICI: pas de /i pour éviter un 2e motif insensible à la casse
+    fireEvent.click(screen.getByRole('button', { name: 'Close' }));
     expect(spy).toHaveBeenCalledWith('Close button has been clicked');
     spy.mockRestore();
   });
