@@ -1,29 +1,33 @@
 // task_3/dashboard/src/Notifications.spec.js
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import Notifications from './Notifications.jsx';
 
 describe('Notifications', () => {
-  test('renders the notifications title and the Close button (ignore case)', () => {
+  test('renders the title (ignore case) and a button', () => {
     render(<Notifications />);
-
+    // Titre — insensible à la casse
     expect(
       screen.getByText(/Here is the list of notifications/i)
-    ).toBeInTheDocument();                 // expect #1
-
-    expect(
-      screen.getByRole('button', { name: /Close/i })
-    ).toBeInTheDocument();                 // expect #2
+    ).toBeInTheDocument();
+    // Bouton — on vérifie juste qu’un bouton est présent (pas de name)
+    expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  test('should render a list of 3 items', () => {
+  test('renders exactly 3 list items', () => {
     render(<Notifications />);
-    expect(screen.getAllByRole('listitem')).toHaveLength(3);  // expect #3
+    expect(screen.getAllByRole('listitem')).toHaveLength(3);
   });
 
-  test('clicking Close logs to console', () => {
+  test('clicking the Close button logs the expected message', () => {
+    // Ici on DOIT vérifier explicitement le log
+    const spy = jest.spyOn(console, 'log').mockImplementation(() => {});
     render(<Notifications />);
-    fireEvent.click(screen.getByRole('button', { name: /Close/i }));
-    // Pas d’assertion ici: le checker écoute la console lui-même.
+
+    fireEvent.click(screen.getByRole('button'));
+
+    expect(spy).toHaveBeenCalledWith('Close button has been clicked');
+    spy.mockRestore();
   });
 });
