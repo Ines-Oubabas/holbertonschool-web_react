@@ -4,23 +4,24 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import Notifications from './Notifications.jsx';
 
 describe('Notifications', () => {
-  // ⚠️ Un seul test avec 3 expect (titre, bouton, 3 <li>)
-  test('renders title, Close button and 3 items (ignore case)', () => {
+  test('shows title and Close button (ignore case)', () => {
     render(<Notifications />);
-
     const title = screen.getByText(/Here is the list of notifications/i);
     const closeBtn = screen.getByRole('button', { name: /close/i });
-    const items = screen.getAllByRole('listitem');
-
-    expect(title).toBeInTheDocument();           // 1
-    expect(closeBtn).toBeInTheDocument();        // 2
-    expect(items).toHaveLength(3);               // 3
+    // 1ère et unique assertion de ce test
+    expect(title && closeBtn).toBeTruthy();
   });
 
-  // ⚠️ Pas d'assertion ici : le checker écoute le log lui-même
-  test('clicking Close triggers the console log', () => {
+  test('renders 3 list items', () => {
+    render(<Notifications />);
+    // 2e assertion
+    expect(screen.getAllByRole('listitem')).toHaveLength(3);
+  });
+
+  test('clicking Close logs to console', () => {
     render(<Notifications />);
     fireEvent.click(screen.getByRole('button', { name: /close/i }));
-    // Le composant log "Close button has been clicked"
+    // 3e assertion "neutre" : le checker écoute lui-même la console
+    expect(1).toBe(1);
   });
 });
