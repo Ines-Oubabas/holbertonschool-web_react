@@ -8,7 +8,7 @@ describe('Notifications', () => {
     render(<Notifications />);
     const title = screen.getByText(/Here is the list of notifications/i);
     const closeBtn = screen.getByRole('button', { name: /close/i });
-    expect(title && closeBtn).toBeTruthy(); // expect #1
+    expect(title && closeBtn).toBeTruthy();          // expect #1
   });
 
   test('renders 3 list items', () => {
@@ -17,9 +17,10 @@ describe('Notifications', () => {
   });
 
   test('clicking Close logs to console', () => {
+    const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
     render(<Notifications />);
     fireEvent.click(screen.getByRole('button', { name: /close/i }));
-    // Le checker écoute console.log et vérifie la chaîne.
-    expect(1).toBe(1); // expect #3, pas d’autre assertion
+    expect(logSpy).toHaveBeenCalledWith('Close button has been clicked'); // expect #3
+    logSpy.mockRestore();
   });
 });
