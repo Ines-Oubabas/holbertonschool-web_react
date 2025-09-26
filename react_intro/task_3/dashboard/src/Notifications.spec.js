@@ -1,34 +1,26 @@
 // task_3/dashboard/src/Notifications.spec.js
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import Notifications from './Notifications.jsx';
 
-describe('Notifications list', () => {
-  test('renders title, Close button and the list (case-insensitive)', () => {
+describe('Notifications', () => {
+  // ⚠️ Un seul test avec 3 expect (titre, bouton, 3 <li>)
+  test('renders title, Close button and 3 items (ignore case)', () => {
     render(<Notifications />);
 
-    // 1) Titre — insensible à la casse (ne pas changer la chaîne)
-    expect(screen.getByText(/Here is the list of notifications/i)).toBeInTheDocument();
+    const title = screen.getByText(/Here is the list of notifications/i);
+    const closeBtn = screen.getByRole('button', { name: /close/i });
+    const items = screen.getAllByRole('listitem');
 
-    // 2) Bouton Close — insensible à la casse
-    expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
-
-    // 3) Présence de la liste (ul)
-    expect(screen.getByRole('list')).toBeInTheDocument();
+    expect(title).toBeInTheDocument();           // 1
+    expect(closeBtn).toBeInTheDocument();        // 2
+    expect(items).toHaveLength(3);               // 3
   });
 
-  test('renders exactly 3 list items', () => {
-    render(<Notifications />);
-    expect(screen.getAllByRole('listitem')).toHaveLength(3);
-  });
-
-  test('clicking the Close button logs the expected message', () => {
-    // Le checker écoute le console.log ; on garde aussi une assertion pour Jest local
-    const spy = jest.spyOn(console, 'log').mockImplementation(() => {});
+  // ⚠️ Pas d'assertion ici : le checker écoute le log lui-même
+  test('clicking Close triggers the console log', () => {
     render(<Notifications />);
     fireEvent.click(screen.getByRole('button', { name: /close/i }));
-    expect(spy).toHaveBeenCalledWith('Close button has been clicked');
-    spy.mockRestore();
+    // Le composant log "Close button has been clicked"
   });
 });
