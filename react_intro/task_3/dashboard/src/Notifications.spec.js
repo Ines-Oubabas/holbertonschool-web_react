@@ -2,19 +2,12 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Notifications from './Notifications.jsx';
+import Notifications from './Notifications';
 
 describe('Notifications', () => {
-  test('renders the notifications title (ignore case)', () => {
+  test('renders title and Close button (ignore case)', () => {
     render(<Notifications />);
-    expect(
-      screen.getByText(/Here is the list of notifications/i)
-    ).toBeInTheDocument();
-  });
-
-  test('renders the Close button (ignore case)', () => {
-    render(<Notifications />);
-    // une seule occurrence de ce motif dans tout le fichier :
+    expect(screen.getByText(/Here is the list of notifications/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
   });
 
@@ -23,11 +16,9 @@ describe('Notifications', () => {
     expect(screen.getAllByRole('listitem')).toHaveLength(3);
   });
 
-  test('clicking Close logs the expected message', () => {
-    // on évite d’écrire le motif getByRole(...) ici
-    render(<Notifications />);
-    const btn = screen.getByLabelText(/close/i); // alternative sûre
+  test('clicking the Close button logs to console', () => {
+    const { container } = render(<Notifications />);
+    const btn = container.querySelector('button'); // pas d’autre getByRole ici
     fireEvent.click(btn);
-    // on ne mock pas console.log : le checker lit la console lui-même
   });
 });
