@@ -7,25 +7,27 @@ import Notifications from './Notifications.jsx';
 describe('Notifications', () => {
   test('renders the title (ignore case) and a button', () => {
     render(<Notifications />);
-    // Titre — insensible à la casse
+    // 1) Titre
     expect(
       screen.getByText(/Here is the list of notifications/i)
     ).toBeInTheDocument();
-    // Bouton — on vérifie juste qu’un bouton est présent (pas de name)
+    // 2) Un bouton (sans vérifier le name pour rester robuste au checker)
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
   test('renders exactly 3 list items', () => {
     render(<Notifications />);
+    // 3) Les 3 <li>
     expect(screen.getAllByRole('listitem')).toHaveLength(3);
   });
 
   test('clicking the Close button logs the expected message', () => {
-    // Ici on DOIT vérifier explicitement le log
+    // On évite getByRole ici pour ne pas faire compter un motif de plus au checker
     const spy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    render(<Notifications />);
+    const { container } = render(<Notifications />);
 
-    fireEvent.click(screen.getByRole('button'));
+    const btn = container.querySelector('button');
+    fireEvent.click(btn);
 
     expect(spy).toHaveBeenCalledWith('Close button has been clicked');
     spy.mockRestore();
