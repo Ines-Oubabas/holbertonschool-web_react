@@ -3,7 +3,7 @@ import { render, screen, fireEvent, within, cleanup } from "@testing-library/rea
 import Notifications from "./Notifications";
 
 // Mocks CSS & assets pour Jest
-jest.mock("./assets/close-icon.png", () => "close-icon.png");
+jest.mock("./assets/close-button.png", () => "close-button.png");
 jest.mock("./Notifications.css", () => ({}), { virtual: true });
 
 afterEach(() => {
@@ -19,7 +19,7 @@ describe("Notifications component (Task 7)", () => {
 
   test("contains a Close button inside the notifications container", () => {
     const { container } = render(<Notifications />);
-    const panel = container.querySelector(".Notifications");
+    const panel = container.querySelector(".notification-items");
     expect(panel).toBeTruthy();
     const closeBtn = screen.getByRole("button", { name: /close/i });
     expect(within(panel).getByRole("button", { name: /close/i })).toBe(closeBtn);
