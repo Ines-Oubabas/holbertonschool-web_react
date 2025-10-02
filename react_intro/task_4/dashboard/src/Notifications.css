@@ -1,9 +1,8 @@
 /* task_4/dashboard/src/Notifications.css */
 .notification-items {
-  border: 1px dashed #e0354b;   /* rouge Holberton */
+  border: 2px dashed #e0354b;   /* rouge Holberton, un peu plus visible */
   margin: 16px 24px 8px;
   padding: 10px 14px;
-  /* pas de color ici → on laisse les <li> gérer leur couleur */
 }
 
 .notification-items ul {
@@ -16,16 +15,18 @@
   margin: 2px 0;
 }
 
-/* Couleurs des priorités (1 bleu, 2 rouges) */
-.notification-items li[data-priority="default"] {
-  color: #1e90ff;               /* bleu */
+/* 1 bleu, 2 rouges — compatibilité avec les 2 attributs possibles */
+.notification-items li[data-priority="default"],
+.notification-items li[data-notification-type="default"] {
+  color: #1e90ff; /* bleu */
 }
 
-.notification-items li[data-priority="urgent"] {
-  color: #e0354b;               /* rouge */
+.notification-items li[data-priority="urgent"],
+.notification-items li[data-notification-type="urgent"] {
+  color: #e0354b; /* rouge */
 }
 
-/* Si le dernier <li> est injecté en HTML, tout son contenu doit être rouge */
+/* Dernier <li> injecté en HTML : tout en rouge */
 .notification-items li:last-child,
 .notification-items li:last-child * {
   color: #e0354b;
