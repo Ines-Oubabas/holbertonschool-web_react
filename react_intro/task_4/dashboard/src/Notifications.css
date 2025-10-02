@@ -1,32 +1,32 @@
-/* task_2/dashboard/src/Notifications.css */
+/* task_4/dashboard/src/Notifications.css */
 .notification-items {
-  border: 2px dashed #e1003c;
+  border: 1px dashed #e0354b;   /* rouge Holberton */
   margin: 16px 24px 8px;
-  padding: 8px 12px;
-  font-size: 12px;
-  color: #333;
+  padding: 10px 14px;
+  /* pas de color ici → on laisse les <li> gérer leur couleur */
 }
 
 .notification-items ul {
   margin: 6px 0 0;
   padding-left: 18px;
+  list-style: disc;
 }
 
 .notification-items li {
   margin: 2px 0;
 }
 
-/* Couleurs des priorités */
+/* Couleurs des priorités (1 bleu, 2 rouges) */
 .notification-items li[data-priority="default"] {
-  color: #1a73e8; /* bleu */
+  color: #1e90ff;               /* bleu */
 }
 
 .notification-items li[data-priority="urgent"] {
-  color: #e1003c; /* rouge */
+  color: #e0354b;               /* rouge */
 }
 
-/* 3e item : rendu via dangerouslySetInnerHTML (sans data-priority) -> forcer en rouge */
+/* Si le dernier <li> est injecté en HTML, tout son contenu doit être rouge */
 .notification-items li:last-child,
-.notification-items li:last-child strong {
-  color: #e1003c;
+.notification-items li:last-child * {
+  color: #e0354b;
 }
