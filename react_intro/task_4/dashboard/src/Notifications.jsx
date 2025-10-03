@@ -8,7 +8,7 @@ export default function Notifications() {
   const handleClose = () => console.log('Close button has been clicked');
 
   return (
-    <div className="Notifications">
+    <div className="notification-items">
       <button
         type="button"
         aria-label="Close"
