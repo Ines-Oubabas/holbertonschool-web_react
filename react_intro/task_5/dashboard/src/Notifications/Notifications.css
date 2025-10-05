@@ -1,0 +1,33 @@
+/* task_4/dashboard/src/Notifications.css */
+.notification-items {
+  border: 2px dashed #e0354b;   /* rouge Holberton, un peu plus visible */
+  margin: 16px 24px 8px;
+  padding: 10px 14px;
+}
+
+.notification-items ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  list-style: disc;
+}
+
+.notification-items li {
+  margin: 2px 0;
+}
+
+/* 1 bleu, 2 rouges — compatibilité avec les 2 attributs possibles */
+.notification-items li[data-priority="default"],
+.notification-items li[data-notification-type="default"] {
+  color: #1e90ff; /* bleu */
+}
+
+.notification-items li[data-priority="urgent"],
+.notification-items li[data-notification-type="urgent"] {
+  color: #e0354b; /* rouge */
+}
+
+/* Dernier <li> injecté en HTML : tout en rouge */
+.notification-items li:last-child,
+.notification-items li:last-child * {
+  color: #e0354b;
+}
