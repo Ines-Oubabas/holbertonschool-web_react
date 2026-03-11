@@ -16,9 +16,9 @@ describe('CourseList', () => {
     expect(rows).toHaveLength(5);
   });
 
-  test('renders 3 rows when it receives an empty array', () => {
+  test('renders 1 row in the tbody when it receives an empty array', () => {
     const { container } = render(<CourseList courses={[]} />);
-    const rows = container.querySelectorAll('tr');
-    expect(rows).toHaveLength(3);
+    const bodyRows = container.querySelectorAll('tbody tr');
+    expect(bodyRows).toHaveLength(1);
   });
 });
