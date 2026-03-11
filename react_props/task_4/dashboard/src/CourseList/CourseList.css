@@ -1,20 +1,18 @@
-#CourseList {
+.course-list {
   width: 95%;
-  border: 1px solid #deb5b545;
+  margin: 16px auto;
+  border: 1px solid #c7c7c7;
   border-collapse: collapse;
-  margin: 40px auto 0 auto;
+  font-size: 0.9rem;
 }
 
-#CourseList th,
-#CourseList td {
-  border: 1px solid #deb5b545;
-  padding: 6px 8px;
+.course-list th,
+.course-list td {
+  border: 1px solid #c7c7c7;
+  padding: 4px 8px;
 }
 
-#CourseList thead tr:first-child {
-  background-color: #f5f5f5ab;
-}
-
-#CourseList thead tr:nth-child(2) {
-  background-color: #f5f5f5ab;
+.course-list thead th:first-child {
+  text-align: center;
+  background: #f7f7f7;
 }

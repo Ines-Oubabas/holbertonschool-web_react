@@ -1,74 +1,63 @@
-:root {
-  --hb-red: #e1003c;
+html, body, #root {
+  margin: 10px;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-  height: 100%;
-  margin: 0;
-}
-
-body {
-  font-family: Georgia, "Times New Roman", serif;
-  color: #222;
-}
-
-.App {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.App-header {
+/* HEADER : bordure 100%, contenu paddé */
+.App-header {                 /* garde display, align-items, padding, border */
   display: flex;
   align-items: center;
-  gap: 28px;
-  padding: 24px 40px 8px;
+  padding: 10px;
+  border-bottom: 3px solid red;
 }
 
-.logo-top {
-  height: 120px;
-  width: auto;
+.App-header h1 {              /* ✅ seule la couleur du h1 */
+  color: #e1003c;
 }
 
-.App-header h1 {
-  margin: 0;
-  font-size: 56px;
-  font-weight: 700;
-  color: var(--hb-red);
-  line-height: 1;
-}
-
-.brand-row {
-  padding: 0 0 0;
-}
-
-.brand {
-  height: 80px;
-  width: auto;
-  display: block;
+.App-header img {
+  height: 200px;
+  margin-right: 20px;
 }
 
 .App-body {
-  border-top: 4px solid var(--hb-red);
-  padding: 18px 24px 24px;
-  flex: 1;
-  min-height: 40vh;
+  padding: 40px;
 }
 
+/* Espace supplémentaire avant "Password" */
+.App-login label[for="password"] {
+  margin-left: 16px;   /* ajuste la valeur : 12, 16, 24… */
+}
+
+/* FORMULAIRE */
+.App-login{ display:inline-flex; align-items:center; gap:8px; }
+
+/* espace aux extrémités de la barre rouge du footer */
 .App-footer {
-  border-top: 3px solid var(--hb-red);
+  position: fixed;
+  left: 20px;        /* espace à gauche */
+  right: 20px;       /* espace à droite */
+  bottom: 0;
+
+  border-top: 3px solid red;
   text-align: center;
-  padding: 14px 0;
+  font-style: italic;
+  padding: 10px 0;
+  background-color: #fff;
+
+  width: auto;       /* surtout pas 100% */
+  margin: 0;         /* margin n'affecte pas un élément fixed correctement ici */
 }
 
-.App-footer p {
-  margin: 0;
-  font-style: italic;
+/* petit titre au-dessus du Login */
+.App-body-title {
+  margin: 0 0 12px;
+  font-size: 0.95rem;
   color: #333;
+}
+
+/* centre le message "No course available yet" */
+.CourseList-empty {
+  text-align: center;
+  color: #555;
 }

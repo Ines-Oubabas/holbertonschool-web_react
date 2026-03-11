@@ -1,54 +1,47 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
 import CourseListRow from './CourseListRow';
 
 describe('CourseListRow', () => {
-  test('renders one th with colspan = 2 when isHeader is true and textSecondCell is null', () => {
+  test('renders one <th> with colSpan=2 when isHeader=true and textSecondCell=null', () => {
     const { container } = render(
       <table>
-        <tbody>
-          <CourseListRow isHeader={true} textFirstCell="Available courses" />
-        </tbody>
+        <thead>
+          <CourseListRow isHeader textFirstCell="Available courses" textSecondCell={null} />
+        </thead>
       </table>
     );
-
-    const th = container.querySelectorAll('th');
-    expect(th).toHaveLength(1);
-    expect(th[0]).toHaveAttribute('colspan', '2');
-    expect(th[0]).toHaveTextContent('Available courses');
+    const th = container.querySelector('th');
+    expect(th).not.toBeNull();
+    expect(th).toHaveAttribute('colspan', '2');
+    expect(th).toHaveTextContent('Available courses');
   });
 
-  test('renders two th cells when isHeader is true and textSecondCell is not null', () => {
-    const { container } = render(
+  test('renders two <th> when isHeader=true and textSecondCell is provided', () => {
+    render(
       <table>
-        <tbody>
-          <CourseListRow
-            isHeader={true}
-            textFirstCell="Course name"
-            textSecondCell="Credit"
-          />
-        </tbody>
+        <thead>
+          <CourseListRow isHeader textFirstCell="Course name" textSecondCell="Credit" />
+        </thead>
       </table>
     );
-
-    const th = container.querySelectorAll('th');
-    expect(th).toHaveLength(2);
+    const headers = screen.getAllByRole('columnheader');
+    expect(headers).toHaveLength(2);
+    expect(headers[0]).toHaveTextContent('Course name');
+    expect(headers[1]).toHaveTextContent('Credit');
   });
 
-  test('renders two td cells when isHeader is false', () => {
-    const { container } = render(
+  test('renders two <td> inside a <tr> when isHeader=false', () => {
+    render(
       <table>
         <tbody>
-          <CourseListRow
-            textFirstCell="ES6"
-            textSecondCell="60"
-          />
+          <CourseListRow textFirstCell="ES6" textSecondCell={60} />
         </tbody>
       </table>
     );
-
-    const td = container.querySelectorAll('td');
-    expect(td).toHaveLength(2);
+    const cells = screen.getAllByRole('cell');
+    expect(cells).toHaveLength(2);
+    expect(cells[0]).toHaveTextContent('ES6');
+    expect(cells[1]).toHaveTextContent('60');
   });
 });
