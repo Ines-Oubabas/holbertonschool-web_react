@@ -1,39 +1,66 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './Notifications.css';
+import NotificationItem from './NotificationItem.jsx';
 import closeIcon from '../assets/close-button.png';
-import { getLatestNotification } from '../utils/utils.js';
+import { getLatestNotification } from '../utils/utils';
 
-export default function Notifications() {
-  const handleClose = () => console.log('Close button has been clicked');
+function Notifications({ notifications = [] }) {
+  const listToRender = notifications.length > 0
+    ? notifications
+    : [
+        { id: 1, type: 'default', value: 'New course available' },
+        { id: 2, type: 'urgent', value: 'New resume available' },
+        { id: 3, type: 'urgent', html: { __html: getLatestNotification() } },
+      ];
 
   return (
-    <div className="Notifications notification-items">
-      <button
-        type="button"
-        aria-label="Close"
-        onClick={handleClose}
-        style={{
-          float: 'right',
-          background: 'transparent',
-          border: 'none',
-          cursor: 'pointer',
-          lineHeight: 0,
-        }}
-        title="Close"
-      >
-        <img src={closeIcon} alt="close" style={{ width: 10, height: 10 }} />
-      </button>
-
+    <div className="Notifications" style={{ position: 'relative' }}>
       <p>Here is the list of notifications</p>
-
       <ul>
-        <li data-priority="default">New course available</li>
-        <li data-priority="urgent">New resume available</li>
-        <li
-          data-priority="urgent"
-          dangerouslySetInnerHTML={{ __html: getLatestNotification() }}
-        />
+        {listToRender.map((item) => (
+          <NotificationItem
+            key={item.id}
+            type={item.type}
+            value={item.value}
+            html={item.html}
+          />
+        ))}
       </ul>
+
+      <button
+        aria-label="Close"
+        onClick={() => console.log('Close button has been clicked')}
+        style={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+          background: 'none',
+          cursor: 'pointer',
+          border: 'none',
+        }}
+      >
+        <img
+          src={closeIcon}
+          alt="close"
+          style={{ width: '10px', height: '10px' }}
+        />
+      </button>
     </div>
   );
 }
+
+Notifications.propTypes = {
+  notifications: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      type: PropTypes.string.isRequired,
+      value: PropTypes.string,
+      html: PropTypes.shape({
+        __html: PropTypes.string,
+      }),
+    })
+  ),
+};
+
+export default Notifications;
