@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import CourseList from './CourseList';
+import CourseList from './CourseList/CourseList';
 
 describe('CourseList', () => {
   const listCourses = [
