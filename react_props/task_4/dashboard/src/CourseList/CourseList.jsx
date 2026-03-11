@@ -7,7 +7,11 @@ function CourseList({ courses = [] }) {
   return (
     <table id="CourseList">
       <thead>
-        <CourseListRow isHeader={true} textFirstCell="Available courses" />
+        <CourseListRow
+          isHeader={true}
+          textFirstCell="Available courses"
+          textSecondCell={null}
+        />
         <CourseListRow
           isHeader={true}
           textFirstCell="Course name"
@@ -17,6 +21,7 @@ function CourseList({ courses = [] }) {
       <tbody>
         {courses.length === 0 ? (
           <CourseListRow
+            isHeader={false}
             textFirstCell="No course available yet"
             textSecondCell={null}
           />
@@ -24,6 +29,7 @@ function CourseList({ courses = [] }) {
           courses.map((course) => (
             <CourseListRow
               key={course.id}
+              isHeader={false}
               textFirstCell={course.name}
               textSecondCell={course.credit}
             />
@@ -37,9 +43,9 @@ function CourseList({ courses = [] }) {
 CourseList.propTypes = {
   courses: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number,
-      name: PropTypes.string,
-      credit: PropTypes.number,
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      credit: PropTypes.number.isRequired,
     })
   ),
 };
