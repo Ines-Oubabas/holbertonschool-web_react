@@ -24,8 +24,8 @@ describe('App (Task 2) - sign in form', () => {
   });
 });
 
-/** Task 4 checks (conditional rendering) */
-describe('App (Task 4)', () => {
+/** Task 4 checks from previous project step */
+describe('App - conditional rendering', () => {
   test('renders Login when isLoggedIn is false', () => {
     const { container } = render(<App isLoggedIn={false} />);
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
@@ -41,8 +41,8 @@ describe('App (Task 4)', () => {
   });
 });
 
-/** Task 1 checks (lifecycles) */
-describe('App (Task 1) - keyboard events', () => {
+/** Lifecycle tests */
+describe('App - keyboard events', () => {
   let alertMock;
 
   beforeEach(() => {
@@ -69,5 +69,16 @@ describe('App (Task 1) - keyboard events', () => {
     fireEvent.keyDown(document, { key: 'h', ctrlKey: true });
 
     expect(window.alert).toHaveBeenCalledWith('Logging you out');
+  });
+});
+
+/** Task 4 new component usage */
+describe('App - BodySection usage', () => {
+  test('displays News from the School and the news paragraph by default', () => {
+    render(<App />);
+    expect(screen.getByText(/news from the school/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/holberton school news goes here/i)
+    ).toBeInTheDocument();
   });
 });

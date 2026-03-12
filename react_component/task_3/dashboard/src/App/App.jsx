@@ -5,6 +5,8 @@ import Footer from '../Footer/Footer';
 import Login from '../Login/Login';
 import Notifications from '../Notifications/Notifications';
 import CourseList from '../CourseList/CourseList';
+import BodySection from '../BodySection/BodySection';
+import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
 import './App.css';
 
 const coursesList = [
@@ -43,7 +45,19 @@ class App extends Component {
         <div className="App">
           <Header />
           <main className="App-body">
-            {!isLoggedIn ? <Login /> : <CourseList courses={courses} />}
+            {!isLoggedIn ? (
+              <BodySectionWithMarginBottom title="Log in to continue">
+                <Login />
+              </BodySectionWithMarginBottom>
+            ) : (
+              <BodySectionWithMarginBottom title="Course list">
+                <CourseList courses={courses} />
+              </BodySectionWithMarginBottom>
+            )}
+
+            <BodySection title="News from the School">
+              <p>Holberton School News goes here</p>
+            </BodySection>
           </main>
           <Footer />
         </div>
