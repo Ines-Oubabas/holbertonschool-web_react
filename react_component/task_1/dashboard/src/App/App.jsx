@@ -7,8 +7,6 @@ import Notifications from '../Notifications/Notifications';
 import CourseList from '../CourseList/CourseList';
 import './App.css';
 
-// const coursesList = [];
-
 const coursesList = [
   { id: 1, name: 'ES6', credit: 60 },
   { id: 2, name: 'Webpack', credit: 20 },
@@ -22,22 +20,22 @@ class App extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
+    document.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
+    document.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  handleKeyDown(event) {
-    if (event.ctrlKey && event.key === 'h') {
+  handleKeyDown(e) {
+    if (e && e.ctrlKey && e.key === 'h') {
       alert('Logging you out');
       this.props.logOut();
     }
   }
 
   render() {
-    const { isLoggedIn = false, courses = coursesList } = this.props;
+    const { isLoggedIn, courses } = this.props;
 
     return (
       <>

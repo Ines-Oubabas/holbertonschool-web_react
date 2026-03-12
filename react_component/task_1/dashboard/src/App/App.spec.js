@@ -57,7 +57,7 @@ describe('App (Task 1) - keyboard events', () => {
     const logOutMock = jest.fn();
     render(<App logOut={logOutMock} />);
 
-    fireEvent.keyDown(window, { key: 'h', ctrlKey: true });
+    fireEvent.keyDown(document, { key: 'h', ctrlKey: true });
 
     expect(logOutMock).toHaveBeenCalledTimes(1);
   });
@@ -66,7 +66,7 @@ describe('App (Task 1) - keyboard events', () => {
     const logOutMock = jest.fn();
     render(<App logOut={logOutMock} />);
 
-    fireEvent.keyDown(window, { key: 'h', ctrlKey: true });
+    fireEvent.keyDown(document, { key: 'h', ctrlKey: true });
 
     expect(window.alert).toHaveBeenCalledWith('Logging you out');
   });
