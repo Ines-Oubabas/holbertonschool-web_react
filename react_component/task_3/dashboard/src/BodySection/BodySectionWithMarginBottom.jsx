@@ -3,12 +3,10 @@ import PropTypes from 'prop-types';
 import BodySection from './BodySection';
 import './BodySectionWithMarginBottom.css';
 
-function BodySectionWithMarginBottom({ title, children }) {
+function BodySectionWithMarginBottom({ title, children = null }) {
   return (
     <div className="bodySectionWithMargin">
-      <BodySection title={title}>
-        {children}
-      </BodySection>
+      <BodySection title={title}>{children}</BodySection>
     </div>
   );
 }
@@ -16,10 +14,6 @@ function BodySectionWithMarginBottom({ title, children }) {
 BodySectionWithMarginBottom.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node,
-};
-
-BodySectionWithMarginBottom.defaultProps = {
-  children: null,
 };
 
 export default BodySectionWithMarginBottom;
