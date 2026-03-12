@@ -5,6 +5,10 @@ import NotificationItem from './NotificationItem.jsx';
 import closeIcon from '../assets/close-button.png';
 
 class Notifications extends Component {
+  shouldComponentUpdate(nextProps) {
+    return nextProps.notifications.length > this.props.notifications.length;
+  }
+
   markAsRead(id) {
     console.log(`Notification ${id} has been marked as read`);
   }

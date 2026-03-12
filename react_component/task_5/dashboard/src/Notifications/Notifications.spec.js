@@ -103,4 +103,63 @@ describe('Notifications component', () => {
     fireEvent.click(screen.getByText(/new course available/i));
     expect(spy).toHaveBeenCalledWith('Notification 1 has been marked as read');
   });
+
+  test('does not re-render if the length of the notifications prop remains the same', () => {
+    const shouldComponentUpdateSpy = jest.spyOn(
+      Notifications.prototype,
+      'shouldComponentUpdate'
+    );
+
+    const { rerender } = render(
+      <Notifications
+        displayDrawer={true}
+        notifications={notificationsList}
+      />
+    );
+
+    const newList = [
+      { id: 4, type: 'default', value: 'test 1' },
+      { id: 5, type: 'urgent', value: 'test 2' },
+      { id: 6, type: 'urgent', value: 'test 3' },
+    ];
+
+    rerender(
+      <Notifications
+        displayDrawer={true}
+        notifications={newList}
+      />
+    );
+
+    expect(shouldComponentUpdateSpy).toHaveBeenCalled();
+    expect(shouldComponentUpdateSpy).toHaveReturnedWith(false);
+  });
+
+  test('re-renders if the length of the notifications prop changes', () => {
+    const shouldComponentUpdateSpy = jest.spyOn(
+      Notifications.prototype,
+      'shouldComponentUpdate'
+    );
+
+    const { rerender } = render(
+      <Notifications
+        displayDrawer={true}
+        notifications={notificationsList}
+      />
+    );
+
+    const newList = [
+      ...notificationsList,
+      { id: 4, type: 'default', value: 'test 4' },
+    ];
+
+    rerender(
+      <Notifications
+        displayDrawer={true}
+        notifications={newList}
+      />
+    );
+
+    expect(shouldComponentUpdateSpy).toHaveBeenCalled();
+    expect(shouldComponentUpdateSpy).toHaveReturnedWith(true);
+  });
 });
