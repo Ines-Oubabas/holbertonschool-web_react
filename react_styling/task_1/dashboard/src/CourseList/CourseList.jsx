@@ -1,43 +1,41 @@
 import React from "react";
-import WithLogging from "../HOC/WithLogging";
 import CourseListRow from "./CourseListRow";
+import WithLogging from "../HOC/WithLogging";
 
 function CourseList({ courses = [] }) {
   return (
-    <div className="mx-auto my-8 w-4/5">
-      <table id="CourseList" className="w-full border-collapse">
-        {courses.length > 0 ? (
-          <>
-            <thead>
-              <CourseListRow
-                isHeader={true}
-                textFirstCell="Available courses"
-              />
-              <CourseListRow
-                isHeader={true}
-                textFirstCell="Course name"
-                textSecondCell="Credit"
-              />
-            </thead>
-            <tbody>
-              {courses.map((course) => (
+    // Wrapper externe: 100% + centrage
+    <div className="w-full flex justify-center my-8">
+      {/* ⚠️ Parent direct de la table: 80% EXACT (w-4/5) */}
+      <div className="w-4/5">
+        <table id="CourseList" className="w-full border-collapse text-black">
+          {courses.length > 0 ? (
+            <>
+              <thead>
+                <CourseListRow isHeader={true} textFirstCell="Available courses" />
                 <CourseListRow
-                  key={course.id}
-                  textFirstCell={course.name}
-                  textSecondCell={course.credit}
+                  isHeader={true}
+                  textFirstCell="Course name"
+                  textSecondCell="Credit"
                 />
-              ))}
+              </thead>
+              <tbody>
+                {courses.map((c) => (
+                  <CourseListRow
+                    key={c.id}
+                    textFirstCell={c.name}
+                    textSecondCell={c.credit}
+                  />
+                ))}
+              </tbody>
+            </>
+          ) : (
+            <tbody>
+              <CourseListRow isHeader={true} textFirstCell="No course available yet" />
             </tbody>
-          </>
-        ) : (
-          <tbody>
-            <CourseListRow
-              isHeader={true}
-              textFirstCell="No course available yet"
-            />
-          </tbody>
-        )}
-      </table>
+          )}
+        </table>
+      </div>
     </div>
   );
 }
