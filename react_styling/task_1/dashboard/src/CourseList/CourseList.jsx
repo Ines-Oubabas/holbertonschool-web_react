@@ -4,8 +4,8 @@ import CourseListRow from "./CourseListRow";
 
 function CourseList({ courses = [] }) {
   return (
-    <div className="mx-auto my-8 w-[80%]">
-      <table id="CourseList" className="w-full">
+    <div className="mx-auto my-8 w-4/5">
+      <table id="CourseList" className="w-full border-collapse">
         {courses.length > 0 ? (
           <>
             <thead>
