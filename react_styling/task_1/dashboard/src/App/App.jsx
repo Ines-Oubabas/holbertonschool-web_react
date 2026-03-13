@@ -9,7 +9,7 @@ import BodySection from '../BodySection/BodySection';
 import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
 import './App.css';
 
-const courses = [
+const listCourses = [
   { id: 1, name: 'ES6', credit: 60 },
   { id: 2, name: 'Webpack', credit: 20 },
   { id: 3, name: 'React', credit: 40 },
@@ -37,7 +37,7 @@ class App extends Component {
   }
 
   render() {
-    const { isLoggedIn, courses: listCourses } = this.props;
+    const { isLoggedIn, courses } = this.props;
 
     return (
       <>
@@ -51,7 +51,7 @@ class App extends Component {
               </BodySectionWithMarginBottom>
             ) : (
               <BodySectionWithMarginBottom title="Course list">
-                <CourseList courses={listCourses} />
+                <CourseList courses={courses} />
               </BodySectionWithMarginBottom>
             )}
 
@@ -74,7 +74,7 @@ App.propTypes = {
 
 App.defaultProps = {
   isLoggedIn: false,
-  courses,
+  courses: listCourses,
   logOut: () => {},
 };
 
