@@ -1,35 +1,53 @@
-@import "tailwindcss";
+/* @import "tailwindcss";
 
 @theme {
-  --font-sans: "Roboto", sans-serif;
-  --color-table-header: #deb5b5;
-  --color-table-rows: #CDCDCD;
+  --font-sans: "Roboto", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 @layer base {
-  html,
-  body {
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
+  :root { font-family: var(--font-sans); }
+  html, body {
+    font-family: "Roboto", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   }
+  body { @apply font-sans; }
+} */
 
-  label,
-  button,
-  .notification-title {
-    font-family: "Roboto", sans-serif;
-    font-weight: 500;
-  }
+@import "tailwindcss";
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  strong,
-  b,
-  th {
-    font-family: "Roboto", sans-serif;
-    font-weight: 700;
-  }
+/* Forcer des requêtes réseau vers les fichiers roboto .woff2 */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("@fontsource/roboto/files/roboto-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("@fontsource/roboto/files/roboto-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("@fontsource/roboto/files/roboto-latin-700-normal.woff2") format("woff2");
+}
+
+/* Thème Tailwind v4 : Roboto par défaut */
+@theme {
+  --font-sans: "Roboto", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+               Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji",
+               "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+  --color-table-header: #deb5b5; /* === Tâche 1 : variables couleurs du tableau === */
+  --color-table-rows: #CDCDCD;
+}
+
+/* Application globale */
+@layer base {
+  html { font-family: var(--font-sans); }
+  body { @apply font-sans; }
 }
