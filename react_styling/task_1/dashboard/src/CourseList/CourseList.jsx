@@ -23,7 +23,11 @@ function CourseList({ courses = [] }) {
           </>
         ) : (
           <tbody>
-            <CourseListRow isHeader={true} textFirstCell="No course available yet" />
+            <tr className="bg-table-header opacity-66">
+              <td colSpan="2" className="border border-gray-400 text-center font-bold">
+                No course available yet
+              </td>
+            </tr>
           </tbody>
         )}
       </table>
