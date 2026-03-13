@@ -9,7 +9,7 @@ import BodySection from '../BodySection/BodySection';
 import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
 import './App.css';
 
-// const coursesList = [];
+const courses = [];
 
 const coursesList = [
   { id: 1, name: 'ES6', credit: 60 },

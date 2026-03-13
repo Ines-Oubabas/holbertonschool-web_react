@@ -11,16 +11,16 @@ export default function CourseListRow({
         {textSecondCell === null ? (
           <th
             colSpan="2"
-            className="bg-table-header/66 border border-gray-400 text-center"
+            className="border border-gray-400 bg-table-header/66 text-center"
           >
             {textFirstCell}
           </th>
         ) : (
           <>
-            <th className="bg-table-header/66 border border-gray-400 text-center">
+            <th className="border border-gray-400 bg-table-header/66 text-center">
               {textFirstCell}
             </th>
-            <th className="bg-table-header/66 border border-gray-400 text-center">
+            <th className="border border-gray-400 bg-table-header/66 text-center">
               {textSecondCell}
             </th>
           </>
@@ -31,10 +31,10 @@ export default function CourseListRow({
 
   return (
     <tr>
-      <td className="bg-table-rows/45 border border-gray-400 pl-2">
+      <td className="border border-gray-400 bg-table-rows/45 pl-2">
         {textFirstCell}
       </td>
-      <td className="bg-table-rows/45 border border-gray-400 pl-2">
+      <td className="border border-gray-400 bg-table-rows/45 pl-2">
         {textSecondCell}
       </td>
     </tr>
