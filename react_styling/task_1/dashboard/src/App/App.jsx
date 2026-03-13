@@ -45,12 +45,13 @@ class App extends Component {
   };
 
   static defaultProps = {
-    isLoggedIn: false,
+    isLoggedIn: true,
     courses: defaultCourses,
     logOut: () => {},
   };
 
   handleKeyDown = (e) => {
+    // Safeguard keys access & accept both 'h' and 'H'
     const key = e && typeof e.key === 'string' ? e.key : '';
     if (e?.ctrlKey && (key === 'h' || key === 'H')) {
       window.alert('Logging you out');
@@ -70,7 +71,17 @@ class App extends Component {
     const { isLoggedIn, courses } = this.props;
 
     return (
-      <>
+      // <>
+      //   <Notifications displayDrawer={false} notifications={defaultNotifications} />
+      //   <div className="App">
+      //     <Header />
+      //     <main className="App-body">
+      //       {isLoggedIn ? <CourseList courses={courses} /> : <Login />}
+      //     </main>
+      //     <Footer />
+      //   </div>
+      // </>
+            <>
         <Notifications displayDrawer={false} notifications={defaultNotifications} />
         <div className="App">
           <Header />
@@ -86,6 +97,7 @@ class App extends Component {
               </BodySectionWithMarginBottom>
             )}
 
+            {/* Bloc d’actualité demandé */}
             <BodySection title="News from the School">
               <p>Holberton School News goes here</p>
             </BodySection>
