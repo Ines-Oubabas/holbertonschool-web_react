@@ -1,14 +1,18 @@
-import CourseListRow from "./CourseListRow";
+import React from "react";
 import WithLogging from "../HOC/WithLogging";
+import CourseListRow from "./CourseListRow";
 
 function CourseList({ courses = [] }) {
   return (
-    <div className="w-full flex justify-center my-8">
-      <table id="CourseList" className="w-[80%] border-collapse text-black">
+    <div className="w-[80%] mx-auto my-8">
+      <table id="CourseList" className="w-full">
         {courses.length > 0 ? (
           <>
             <thead>
-              <CourseListRow isHeader={true} textFirstCell="Available courses" />
+              <CourseListRow
+                isHeader={true}
+                textFirstCell="Available courses"
+              />
               <CourseListRow
                 isHeader={true}
                 textFirstCell="Course name"
@@ -16,18 +20,21 @@ function CourseList({ courses = [] }) {
               />
             </thead>
             <tbody>
-              {courses.map((c) => (
+              {courses.map((course) => (
                 <CourseListRow
-                  key={c.id}
-                  textFirstCell={c.name}
-                  textSecondCell={c.credit}
+                  key={course.id}
+                  textFirstCell={course.name}
+                  textSecondCell={course.credit}
                 />
               ))}
             </tbody>
           </>
         ) : (
           <tbody>
-            <CourseListRow isHeader={true} textFirstCell="No course available yet" />
+            <CourseListRow
+              isHeader={true}
+              textFirstCell="No course available yet"
+            />
           </tbody>
         )}
       </table>
