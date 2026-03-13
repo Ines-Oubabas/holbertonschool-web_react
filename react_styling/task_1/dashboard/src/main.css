@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Roboto", sans-serif;
+  --color-table-header: #deb5b5;
+  --color-table-rows: #cdcdcd;
+}
+
+@layer base {
+  html,
+  body {
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+  }
+
+  label,
+  button,
+  .notification-title {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  strong,
+  b,
+  th {
+    font-family: "Roboto", sans-serif;
+    font-weight: 700;
+  }
+}
