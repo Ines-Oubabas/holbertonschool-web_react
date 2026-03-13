@@ -7,20 +7,20 @@ export default function CourseListRow({
 }) {
   if (isHeader) {
     return (
-      <tr className="bg-table-header/66">
+      <tr>
         {textSecondCell === null ? (
           <th
             colSpan="2"
-            className="border border-gray-400 text-center"
+            className="border border-gray-400 text-center bg-table-header/66"
           >
             {textFirstCell}
           </th>
         ) : (
           <>
-            <th className="border border-gray-400 text-center">
+            <th className="border border-gray-400 text-center bg-table-header/66">
               {textFirstCell}
             </th>
-            <th className="border border-gray-400 text-center">
+            <th className="border border-gray-400 text-center bg-table-header/66">
               {textSecondCell}
             </th>
           </>
@@ -30,9 +30,13 @@ export default function CourseListRow({
   }
 
   return (
-    <tr className="bg-table-rows/45">
-      <td className="border border-gray-400 pl-2">{textFirstCell}</td>
-      <td className="border border-gray-400 pl-2">{textSecondCell}</td>
+    <tr>
+      <td className="border border-gray-400 pl-2 bg-table-rows/45">
+        {textFirstCell}
+      </td>
+      <td className="border border-gray-400 pl-2 bg-table-rows/45">
+        {textSecondCell}
+      </td>
     </tr>
   );
 }
