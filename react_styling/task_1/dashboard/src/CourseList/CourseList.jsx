@@ -4,7 +4,7 @@ import WithLogging from '../HOC/WithLogging'
 function CourseList({ courses = [] }) {
   return (
     <div className="courses">
-      <table id="CourseList" className="w-full border-collapse border border-gray-300" style={{width: '100%'}}>
+      <table id="CourseList" className="w-full border-collapse">
         {courses.length > 0 ? (
           <>
             <thead>
@@ -24,7 +24,7 @@ function CourseList({ courses = [] }) {
         ) : (
           <tbody>
             <tr className="bg-table-header opacity-66">
-              <td colSpan="2" className="border border-gray-400 text-center font-bold">
+              <td colSpan="2" className="text-center font-bold">
                 No course available yet
               </td>
             </tr>

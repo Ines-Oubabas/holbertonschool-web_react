@@ -11,3 +11,38 @@
     font-family: var(--font-sans);
   }
 }
+
+.courses {
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 8rem;
+  margin-bottom: 8rem;
+  height: 29vh;
+  overflow-x: auto;
+}
+
+#CourseList {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.courses td, .courses th {
+  border: 1px solid #9ca3af;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.courses th {
+  text-align: center;
+}
+
+.bg-table-header {
+  background-color: var(--color-table-header);
+}
+
+.bg-table-rows {
+  background-color: var(--color-table-rows);
+}
+
