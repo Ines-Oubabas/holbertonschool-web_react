@@ -1,10 +1,29 @@
-html, body {
-  height: 100%;
-  margin: 0;
+.root-notifications {
+  position: relative;
 }
 
-#root {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
+.bodySection {
+  padding: 32px;
 }
+
+.bodySection h2 {
+  margin-top: 0;
+  color: #e0354b;
+}
+
+.courses {
+  overflow-x: auto;
+}
+
+#CourseList {
+  min-width: 600px;
+}
+
+.bg-table-header {
+  background-color: var(--color-table-header);
+}
+
+.bg-table-rows {
+  background-color: var(--color-table-rows);
+}
+
