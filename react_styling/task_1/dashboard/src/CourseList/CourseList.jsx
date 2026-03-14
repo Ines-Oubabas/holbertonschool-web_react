@@ -3,8 +3,8 @@ import WithLogging from '../HOC/WithLogging'
 
 function CourseList({ courses = [] }) {
   return (
-    <div className="courses mx-auto my-32 w-4/5 h-[29vh]">
-      <table id="CourseList" className="w-full border-collapse border border-gray-300">
+    <div className="courses">
+      <table id="CourseList" className="w-full border-collapse border border-gray-300" style={{width: '100%'}}>
         {courses.length > 0 ? (
           <>
             <thead>
@@ -37,3 +37,4 @@ function CourseList({ courses = [] }) {
 
 const CourseListWithLogging = WithLogging(CourseList)
 export default CourseListWithLogging
+
