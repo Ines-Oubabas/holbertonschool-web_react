@@ -17,10 +17,12 @@ const notificationsList = [
 ]
 
 const coursesList = [
-  { id: 1, name: 'ES6', credit: 60 },
-  { id: 2, name: 'Webpack', credit: 20 },
-  { id: 3, name: 'React', credit: 40 },
+  { id: 1, name: 'ES6', credit: '60' },
+  { id: 2, name: 'Webpack', credit: '20' },
+  { id: 3, name: 'React', credit: '40' },
 ]
+
+// const coursesList = []
 
 class App extends React.Component {
   constructor(props) {
@@ -31,7 +33,6 @@ class App extends React.Component {
   static defaultProps = {
     isLoggedIn: true,
     logOut: () => {},
-    courses: coursesList,
   }
 
   componentDidMount() {
@@ -42,7 +43,7 @@ class App extends React.Component {
     document.removeEventListener('keydown', this.handleKeyDown)
   }
 
-  handleKeyDown(event) {
+  handleKeyDown = event => {
     if (event.ctrlKey && event.key === 'h') {
       alert('Logging you out')
       this.props.logOut()
@@ -50,7 +51,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { isLoggedIn, courses } = this.props
+    const { isLoggedIn } = this.props
 
     return (
       <React.Fragment>
@@ -62,7 +63,7 @@ class App extends React.Component {
 
         {isLoggedIn ? (
           <BodySectionWithMarginBottom title="Course list">
-            <CourseList courses={courses} />
+            <CourseList courses={coursesList} />
           </BodySectionWithMarginBottom>
         ) : (
           <BodySectionWithMarginBottom title="Log in to continue">
@@ -81,15 +82,7 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  isLoggedIn: PropTypes.bool,
   logOut: PropTypes.func,
-  courses: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-      credit: PropTypes.number.isRequired,
-    })
-  ),
 }
 
 export default App
