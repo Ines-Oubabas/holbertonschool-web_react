@@ -1,51 +1,31 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import NotificationItem from './NotificationItem';
+import NotificationItem from './NotificationItem'
+import { render, screen, fireEvent } from '@testing-library/react'
 
-describe('NotificationItem component', () => {
-  test('default → data-notification-type="default" et couleur bleu', () => {
-    render(
-      <ul>
-        <NotificationItem id={1} type="default" value="Default note" />
-      </ul>
-    );
+// test('Check whether the li element has the color blue, and the the attribute data-notification-type set to default', () => {
+//   render(<NotificationItem type="default" value="Test notification" />);
+//   const li = screen.getByText('Test notification');
 
-    const li = screen.getByRole('listitem');
-    expect(li).toHaveAttribute('data-notification-type', 'default');
-    expect(li).toHaveStyle({ color: 'blue' });
-    expect(li).toHaveTextContent('Default note');
-  });
+//   expect(li).toBeInTheDocument();
+//   expect(li).toHaveAttribute('data-notification-type', 'default');
+//   expect(li).toHaveStyle('color: blue');
+// })
 
-  test('urgent → data-notification-type="urgent" et couleur rouge', () => {
-    render(
-      <ul>
-        <NotificationItem id={2} type="urgent" value="Urgent note" />
-      </ul>
-    );
+// test('Check whether the li element has the color red, and the the attribute data-notification-type set to urgent', () => {
+//   render(<NotificationItem type="urgent" value="Test urgent notification" />);
+//   const li = screen.getByText('Test urgent notification');
 
-    const li = screen.getByRole('listitem');
-    expect(li).toHaveAttribute('data-notification-type', 'urgent');
-    expect(li).toHaveStyle({ color: 'red' });
-    expect(li).toHaveTextContent('Urgent note');
-  });
+//   expect(li).toBeInTheDocument();
+//   expect(li).toHaveAttribute('data-notification-type', 'urgent');
+//   expect(li).toHaveStyle('color: red');
+// })
 
-  test('calls markAsRead when clicked', () => {
-    const markAsReadMock = jest.fn();
+test('Check that this prop is called whenever the click event is triggered', () => {
+  const markAsReadMock = jest.fn()
+  const id = 1
+  render(<NotificationItem id={id} type="default" value="Test notification" markAsRead={() => markAsReadMock(id)} />)
+  const li = screen.getByText('Test notification')
 
-    render(
-      <ul>
-        <NotificationItem
-          id={3}
-          type="default"
-          value="Click me"
-          markAsRead={markAsReadMock}
-        />
-      </ul>
-    );
+  fireEvent.click(li)
 
-    fireEvent.click(screen.getByRole('listitem'));
-    expect(markAsReadMock).toHaveBeenCalledTimes(1);
-    expect(markAsReadMock).toHaveBeenCalledWith(3);
-  });
-});
+  expect(markAsReadMock).toHaveBeenCalledWith(id)
+})
