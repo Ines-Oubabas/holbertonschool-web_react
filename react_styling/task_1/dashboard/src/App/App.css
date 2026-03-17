@@ -1,41 +1,10 @@
-.root-notifications {
-  position: relative;
+html, body {
+  height: 100%;
+  margin: 0;
 }
 
-.bodySection {
-  padding: 32px;
+#root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
-
-.bodySection h2 {
-  margin-top: 0;
-  color: #e0354b;
-}
-
-.courses {
-  width: 80% !important;
-  margin: 0 auto !important;
-  margin-top: 8rem !important;
-  margin-bottom: 8rem !important;
-  height: 29vh !important;
-  overflow-x: auto !important;
-}
-
-#CourseList {
-  width: 100% !important;
-  min-width: 0 !important;
-}
-
-
-
-#CourseList {
-  min-width: 600px;
-}
-
-.bg-table-header {
-  background-color: var(--color-table-header);
-}
-
-.bg-table-rows {
-  background-color: var(--color-table-rows);
-}
-
