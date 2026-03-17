@@ -51,29 +51,31 @@ class App extends React.Component {
     const { isLoggedIn = false } = this.props
 
     return (
-      <React.Fragment>
-        <div className="root-notifications">
+      <div className="min-h-screen flex flex-col px-6 pt-4">
+        <div className="self-end mb-4">
           <Notifications notifications={notificationsList} />
         </div>
 
         <Header />
 
-        {isLoggedIn ? (
-          <BodySectionWithMarginBottom title="Course list">
-            <CourseList courses={coursesList} />
-          </BodySectionWithMarginBottom>
-        ) : (
-          <BodySectionWithMarginBottom title="Log in to continue">
-            <Login />
-          </BodySectionWithMarginBottom>
-        )}
+        <main className="flex-1">
+          {isLoggedIn ? (
+            <BodySectionWithMarginBottom title="Course list">
+              <CourseList courses={coursesList} />
+            </BodySectionWithMarginBottom>
+          ) : (
+            <BodySectionWithMarginBottom title="Log in to continue">
+              <Login />
+            </BodySectionWithMarginBottom>
+          )}
 
-        <BodySection title="News from the School">
-          <p>Holberton School News goes here</p>
-        </BodySection>
+          <BodySection title="News from the School">
+            <p>Holberton School News goes here</p>
+          </BodySection>
+        </main>
 
         <Footer />
-      </React.Fragment>
+      </div>
     )
   }
 }
