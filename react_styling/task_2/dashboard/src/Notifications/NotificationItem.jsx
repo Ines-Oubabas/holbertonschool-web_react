@@ -1,40 +1,54 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 
-class NotificationItem extends React.PureComponent {
+export default class NotificationItem extends PureComponent {
+  static propTypes = {
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    type: PropTypes.string,
+    value: PropTypes.string,
+    html: PropTypes.shape({ __html: PropTypes.string }),
+    markAsRead: PropTypes.func,
+  };
+
+  static defaultProps = {
+    type: 'default',
+    markAsRead: () => {},
+  };
+
+  handleClick = () => {
+    const { id, markAsRead } = this.props;
+    markAsRead(id);
+  };
+
   render() {
-    const { type, html, value, markAsRead } = this.props
-    const textColor = type === 'urgent' ? 'text-urgent-notification-item font-semibold' : 'text-default-notification-item'
-    const bulletColor = type === 'urgent' ? 'bg-urgent-notification-item' : 'bg-default-notification-item'
+    const { type, html, value } = this.props;
+
+    const style = {
+      color:
+        type === 'urgent'
+          ? 'var(--urgent-notification-item)'
+          : 'var(--default-notification-item)',
+    };
+
+    if (html) {
+      return (
+        <li
+          data-notification-type={type}
+          style={style}
+          onClick={this.handleClick}
+          dangerouslySetInnerHTML={html}
+        />
+      );
+    }
 
     return (
       <li
         data-notification-type={type}
-        className="flex cursor-pointer items-start gap-2 text-sm"
-        onClick={markAsRead}
-        onKeyDown={event => event.key === 'Enter' && markAsRead()}
-        role="button"
-        tabIndex={0}
+        style={style}
+        onClick={this.handleClick}
       >
-        <span aria-hidden="true" className={`mt-1 h-2 w-2 rounded-sm ${bulletColor}`} />
-        {value ? <span className={textColor}>{value}</span> : <span className={textColor} dangerouslySetInnerHTML={html} />}
+        {value}
       </li>
-    )
+    );
   }
 }
-
-NotificationItem.propTypes = {
-  type: PropTypes.string.isRequired,
-  value: PropTypes.string,
-  html: PropTypes.shape({
-    __html: PropTypes.string,
-  }),
-  markAsRead: PropTypes.func,
-}
-
-NotificationItem.defaultProps = {
-  type: 'default',
-  markAsRead: () => {},
-}
-
-export default NotificationItem
