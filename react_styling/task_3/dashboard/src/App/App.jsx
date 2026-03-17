@@ -17,6 +17,7 @@ class App extends React.Component {
   }
 
   static defaultProps = {
+    isLoggedIn: false,
     logOut: () => {},
   }
 
@@ -75,5 +76,6 @@ class App extends React.Component {
 export default App
 
 App.propTypes = {
+  isLoggedIn: PropTypes.bool,
   logOut: PropTypes.func,
 }
