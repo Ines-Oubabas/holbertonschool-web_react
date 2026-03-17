@@ -12,14 +12,18 @@ class Notifications extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    const currentNotifications = this.props.notifications || this.props.listNotifications || []
+    const nextNotifications = nextProps.notifications || nextProps.listNotifications || []
+
     return (
-      nextProps.notifications.length !== this.props.notifications.length ||
+      nextNotifications.length !== currentNotifications.length ||
       nextProps.displayDrawer !== this.props.displayDrawer
     )
   }
 
   render() {
-    const { notifications = [], displayDrawer = true } = this.props
+    const notifications = this.props.notifications || this.props.listNotifications || []
+    const { displayDrawer = true } = this.props
 
     return (
       <div className="pr-4">
@@ -27,20 +31,20 @@ class Notifications extends React.Component {
 
         {displayDrawer && (
           <div className="relative ml-auto w-1/4 border-2 border-dashed border-[var(--main-color)] p-[6px]">
-            <button
-              type="button"
-              aria-label="Close"
-              onClick={() => console.log('Close button has been clicked')}
-              className="absolute right-2 top-1"
-            >
-              x
-            </button>
-
             {notifications.length > 0 ? (
               <>
+                <button
+                  type="button"
+                  aria-label="Close"
+                  onClick={() => console.log('Close button has been clicked')}
+                  className="absolute right-2 top-1"
+                >
+                  x
+                </button>
+
                 <p>Here is the list of notifications</p>
                 <ul>
-                  {notifications.map(notification => (
+                  {notifications.map((notification) => (
                     <NotificationItem
                       key={notification.id}
                       type={notification.type}
