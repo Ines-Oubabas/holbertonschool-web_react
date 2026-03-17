@@ -26,23 +26,23 @@ class Notifications extends React.Component {
     const { displayDrawer = true } = this.props
 
     return (
-      <div className="pr-4">
-        <p className="text-right">Your notifications</p>
+      <div className="pt-1">
+        <p className="mb-1 text-right text-xs">Your notifications</p>
 
         {displayDrawer && (
-          <div className="relative ml-auto w-1/4 border-2 border-dashed border-[var(--main-color)] p-[6px]">
+          <div className="relative ml-auto w-[25%] min-w-[300px] border-2 border-dashed border-[var(--main-color)] p-[6px] text-xs">
             {notifications.length > 0 ? (
               <>
                 <button
                   type="button"
                   aria-label="Close"
                   onClick={() => console.log('Close button has been clicked')}
-                  className="absolute right-2 top-1"
+                  className="absolute right-1 top-0"
                 >
                   x
                 </button>
 
-                <p>Here is the list of notifications</p>
+                <p className="mb-1">Here is the list of notifications</p>
                 <ul>
                   {notifications.map((notification) => (
                     <NotificationItem

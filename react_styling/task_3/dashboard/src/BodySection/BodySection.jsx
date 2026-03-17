@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 
 function BodySection({ title, children = null }) {
   return (
-    <div className="px-8 py-6">
-      <h2 className="mb-4 text-xl font-bold">{title}</h2>
+    <div className="px-4 py-4">
+      <h2 className="mb-2 text-base font-bold">{title}</h2>
       {children}
     </div>
   )

@@ -3,7 +3,7 @@ import { getCurrentYear, getFooterCopy } from '../utils/utils.js'
 
 export default function Footer({ isIndex = true }) {
   return (
-    <div className="mt-12 border-t-2 border-[var(--main-color)] py-4 text-center italic">
+    <div className="mt-auto border-t-2 border-[var(--main-color)] py-3 text-center text-sm italic">
       <p>
         Copyright {getCurrentYear()} - {getFooterCopy(isIndex)}
       </p>
