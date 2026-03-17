@@ -1,54 +1,38 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-export default class NotificationItem extends PureComponent {
-  static propTypes = {
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    type: PropTypes.string,
-    value: PropTypes.string,
-    html: PropTypes.shape({ __html: PropTypes.string }),
-    markAsRead: PropTypes.func,
-  };
-
-  static defaultProps = {
-    type: 'default',
-    markAsRead: () => {},
-  };
-
-  handleClick = () => {
-    const { id, markAsRead } = this.props;
-    markAsRead(id);
-  };
-
+class NotificationItem extends React.PureComponent {
   render() {
-    const { type, html, value } = this.props;
-
-    const style = {
-      color:
-        type === 'urgent'
-          ? 'var(--urgent-notification-item)'
-          : 'var(--default-notification-item)',
-    };
-
-    if (html) {
-      return (
-        <li
-          data-notification-type={type}
-          style={style}
-          onClick={this.handleClick}
-          dangerouslySetInnerHTML={html}
-        />
-      );
-    }
+    const { type, html, value, markAsRead } = this.props
+    const textColor =
+      type === 'urgent'
+        ? 'text-[var(--urgent-notification-item)]'
+        : 'text-[var(--default-notification-item)]'
 
     return (
       <li
         data-notification-type={type}
-        style={style}
-        onClick={this.handleClick}
+        className={textColor}
+        onClick={markAsRead}
       >
-        {value}
+        {value ? value : <span dangerouslySetInnerHTML={html} />}
       </li>
-    );
+    )
   }
 }
+
+NotificationItem.propTypes = {
+  type: PropTypes.string,
+  value: PropTypes.string,
+  html: PropTypes.shape({
+    __html: PropTypes.string,
+  }),
+  markAsRead: PropTypes.func,
+}
+
+NotificationItem.defaultProps = {
+  type: 'default',
+  markAsRead: () => {},
+}
+
+export default NotificationItem

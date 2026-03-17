@@ -75,6 +75,6 @@ class App extends React.Component {
 
 export default App
 
-App.PropTypes = {
+App.propTypes = {
   logOut: PropTypes.func,
 }
