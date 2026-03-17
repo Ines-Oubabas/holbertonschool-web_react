@@ -12,7 +12,6 @@ import { getLatestNotification } from '../utils/utils'
 class App extends React.Component {
   constructor(props) {
     super(props)
-    // This binding is necessary to make `this` work in the callback
     this.handleKeyDown = this.handleKeyDown.bind(this)
   }
 
@@ -29,7 +28,7 @@ class App extends React.Component {
     document.removeEventListener('keydown', this.handleKeyDown)
   }
 
-  handleKeyDown = event => {
+  handleKeyDown = (event) => {
     if (event.ctrlKey && event.key === 'h') {
       alert('Logging you out')
       this.props.logOut()
@@ -42,19 +41,23 @@ class App extends React.Component {
       { id: 2, type: 'urgent', value: 'New resume available' },
       { id: 3, type: 'urgent', html: { __html: getLatestNotification() } },
     ]
+
     const coursesList = [
       { id: 1, name: 'ES6', credit: '60' },
       { id: 2, name: 'Webpack', credit: '20' },
       { id: 3, name: 'React', credit: '40' },
     ]
-    const { isLoggedIn } = this.props
+
+    const { isLoggedIn = false } = this.props
 
     return (
       <React.Fragment>
         <div className="root-notifications">
           <Notifications notifications={notificationsList} />
         </div>
+
         <Header />
+
         {isLoggedIn ? (
           <BodySectionWithMarginBottom title="Course list">
             <CourseList courses={coursesList} />
@@ -64,18 +67,20 @@ class App extends React.Component {
             <Login />
           </BodySectionWithMarginBottom>
         )}
+
         <BodySection title="News from the School">
           <p>Holberton School News goes here</p>
         </BodySection>
+
         <Footer />
       </React.Fragment>
     )
   }
 }
 
-export default App
-
 App.propTypes = {
   isLoggedIn: PropTypes.bool,
   logOut: PropTypes.func,
 }
+
+export default App
