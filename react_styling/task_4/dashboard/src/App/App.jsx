@@ -17,7 +17,7 @@ class App extends React.Component {
 
   static defaultProps = {
     isLoggedIn: false,
-    displayDrawer: false,
+    displayDrawer: true,
     logOut: () => {},
   }
 
@@ -49,7 +49,7 @@ class App extends React.Component {
       { id: 3, name: 'React', credit: '40' },
     ]
 
-    const { isLoggedIn = false, displayDrawer = false } = this.props
+    const { isLoggedIn = false, displayDrawer = true } = this.props
 
     return (
       <div className="flex min-h-screen flex-col px-4 pt-4">
