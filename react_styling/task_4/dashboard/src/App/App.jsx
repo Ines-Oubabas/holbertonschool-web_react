@@ -17,6 +17,7 @@ class App extends React.Component {
 
   static defaultProps = {
     isLoggedIn: false,
+    displayDrawer: false,
     logOut: () => {},
   }
 
@@ -48,12 +49,15 @@ class App extends React.Component {
       { id: 3, name: 'React', credit: '40' },
     ]
 
-    const { isLoggedIn = false } = this.props
+    const { isLoggedIn = false, displayDrawer = false } = this.props
 
     return (
       <div className="flex min-h-screen flex-col px-4 pt-4">
         <div className="mb-2 flex justify-end">
-          <Notifications notifications={notificationsList} />
+          <Notifications
+            notifications={notificationsList}
+            displayDrawer={displayDrawer}
+          />
         </div>
 
         <Header />
@@ -88,6 +92,7 @@ class App extends React.Component {
 
 App.propTypes = {
   isLoggedIn: PropTypes.bool,
+  displayDrawer: PropTypes.bool,
   logOut: PropTypes.func,
 }
 
