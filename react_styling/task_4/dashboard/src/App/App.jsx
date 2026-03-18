@@ -84,7 +84,7 @@ class App extends React.Component {
           </BodySection>
         </main>
 
-        <Footer />
+        <Footer isIndex={false} />
       </div>
     )
   }
