@@ -51,8 +51,8 @@ class App extends React.Component {
     const { isLoggedIn = false } = this.props
 
     return (
-      <div className="flex min-h-screen flex-col px-4 pt-4 sm:px-6 lg:px-4">
-        <div className="mb-2">
+      <div className="flex min-h-screen flex-col px-4 pt-4">
+        <div className="mb-2 flex justify-end">
           <Notifications notifications={notificationsList} />
         </div>
 
@@ -71,11 +71,11 @@ class App extends React.Component {
 
           <BodySection title="News from the School">
             <p className="sr-only">Holberton School News goes here</p>
-            <p>
+            <p className="max-w-xl">
               ipsum Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-              Similique, asperiores architecto blanditiis fuga doloribus sit
-              illum aliquid ea distinctio minus accusantium, impedit quo
-              voluptatibus ut magni dicta. Recusandae, quia dicta?
+              Similique, asperiores architecto blanditiis fuga doloribus sit illum
+              aliquid ea distinctio minus accusantium, impedit quo voluptatibus ut
+              magni dicta. Recusandae, quia dicta?
             </p>
           </BodySection>
         </main>

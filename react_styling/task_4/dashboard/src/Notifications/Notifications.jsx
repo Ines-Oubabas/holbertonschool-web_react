@@ -32,7 +32,7 @@ class Notifications extends React.Component {
         </p>
 
         {displayDrawer && (
-          <div className="relative ml-auto w-[25%] min-w-[300px] border-2 border-dashed border-[var(--main-color)] p-[6px] text-xs max-[912px]:ml-0 max-[912px]:min-h-screen max-[912px]:w-full max-[912px]:p-3 max-[912px]:text-base">
+          <div className="relative ml-auto w-[24rem] border-2 border-dashed border-[var(--main-color)] p-[6px] text-xs max-[912px]:ml-0 max-[912px]:min-h-screen max-[912px]:w-full max-[912px]:p-3 max-[912px]:text-base">
             {notifications.length > 0 ? (
               <>
                 <button
