@@ -52,10 +52,11 @@ class App extends React.Component {
 
     return (
       <div className="min-h-screen flex flex-col px-4 pt-4">
-        <div className="flex items-start justify-between">
-          <Header />
+        <div className="mb-2">
           <Notifications notifications={notificationsList} />
         </div>
+
+        <Header />
 
         <main className="flex-1">
           {isLoggedIn ? (
