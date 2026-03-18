@@ -1,39 +1,34 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react';
 
-class NotificationItem extends React.PureComponent {
+export default class NotificationItem extends PureComponent {
   render() {
-    const { type, html, value, markAsRead } = this.props
-
-    const textColor =
-      type === 'urgent'
-        ? 'text-[var(--urgent-notification-item)]'
-        : 'text-[var(--default-notification-item)]'
-
-    return (
-      <li
-        data-notification-type={type}
-        className={`py-3 text-sm sm:text-xs md:text-sm lg:text-xs xl:text-xs max-[912px]:border-b max-[912px]:border-gray-500 max-[912px]:px-3 ${textColor}`}
-        onClick={markAsRead}
-      >
-        {value ? value : <span dangerouslySetInnerHTML={html} />}
-      </li>
-    )
+    const { type, html, value, markAsRead, id } = this.props;
+    
+    if (type === 'default') {
+      return (
+        <li 
+          className="text-[color:var(--default-notification-item)] pl-1 max-[912px]:text-[20px] max-[912px]:w-full max-[912px]:border-b max-[912px]:border-black max-[912px]:p-[10px_8px]"
+          data-notification-type={type}
+          onClick={() => markAsRead(id)}
+        >{value}</li>
+      );
+    } else if (type === 'urgent' && html !== undefined) {
+      return (
+        <li 
+          className="text-[color:var(--urgent-notification-item)] pl-1 max-[912px]:text-[20px] max-[912px]:w-full max-[912px]:border-b max-[912px]:border-black max-[912px]:p-[10px_8px]"
+          data-notification-type={type} 
+          dangerouslySetInnerHTML={html}
+          onClick={() => markAsRead(id)}
+        ></li>
+      );
+    } else {
+      return (
+        <li 
+          className="text-[color:var(--urgent-notification-item)] pl-1 max-[912px]:text-[20px] max-[912px]:w-full max-[912px]:border-b max-[912px]:border-black max-[912px]:p-[10px_8px]"
+          data-notification-type={type}
+          onClick={() => markAsRead(id)}
+        >{value}</li>
+      );
+    }
   }
 }
-
-NotificationItem.propTypes = {
-  type: PropTypes.string,
-  value: PropTypes.string,
-  html: PropTypes.shape({
-    __html: PropTypes.string,
-  }),
-  markAsRead: PropTypes.func,
-}
-
-NotificationItem.defaultProps = {
-  type: 'default',
-  markAsRead: () => {},
-}
-
-export default NotificationItem
