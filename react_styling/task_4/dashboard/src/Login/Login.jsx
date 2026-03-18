@@ -25,7 +25,7 @@ function Login() {
 
         <button
           type="button"
-          className="h-5 border border-gray-500 px-1 text-xs max-[520px]:h-8"
+          className="h-5 border border-gray-500 px-1 text-xs max-[520px]:h-8 max-[520px]:px-2"
         >
           OK
         </button>
