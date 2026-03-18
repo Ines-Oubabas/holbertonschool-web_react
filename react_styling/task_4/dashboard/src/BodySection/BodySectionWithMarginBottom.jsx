@@ -1,18 +1,11 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import BodySection from './BodySection'
+import BodySection from './BodySection';
 
-function BodySectionWithMarginBottom({ title, children = null }) {
+export default function BodySectionWithMarginBottom({ title, children }) {
   return (
-    <div className="bodySectionWithMargin mb-10">
-      <BodySection title={title}>{children}</BodySection>
+    <div className="bodySectionWithMargin mb-10 max-w-full">
+      <BodySection title={title}>
+        {children}
+      </BodySection>
     </div>
-  )
+  );
 }
-
-BodySectionWithMarginBottom.propTypes = {
-  title: PropTypes.string.isRequired,
-  children: PropTypes.node,
-}
-
-export default BodySectionWithMarginBottom
