@@ -1,9 +1,9 @@
-import React from "react";
+import { PureComponent } from "react";
 import PropTypes from "prop-types";
 import closeButton from "../assets/close-button.png";
 import NotificationItem from "./NotificationItem.jsx";
 
-class Notifications extends React.PureComponent {
+class Notifications extends PureComponent {
   render() {
     const {
       notifications = [],
@@ -15,13 +15,15 @@ class Notifications extends React.PureComponent {
 
     const hasNotifications = notifications.length > 0;
     const shouldBounce = hasNotifications && !displayDrawer;
-    const titleClasses = `notification-title text-right text-sm md:text-base cursor-pointer ${
-      shouldBounce ? "animate-bounce" : ""
-    }`;
 
     return (
       <div className="notifications-root">
-        <div className={titleClasses} onClick={handleDisplayDrawer}>
+        <div
+          className={`notification-title text-right text-sm md:text-base cursor-pointer ${
+            shouldBounce ? "animate-bounce" : ""
+          }`}
+          onClick={handleDisplayDrawer}
+        >
           Your notifications
         </div>
 
@@ -55,7 +57,10 @@ class Notifications extends React.PureComponent {
                   {notifications.map((notification) => (
                     <NotificationItem
                       key={notification.id}
-                      {...notification}
+                      id={notification.id}
+                      type={notification.type}
+                      value={notification.value}
+                      html={notification.html}
                       markAsRead={markNotificationAsRead}
                     />
                   ))}
