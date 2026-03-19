@@ -4,16 +4,15 @@ import Header from "../Header/Header.jsx";
 import Login from "../Login/Login.jsx";
 import Footer from "../Footer/Footer.jsx";
 import CourseList from "../CourseList/CourseList.jsx";
-import BodySectionWithMarginBottom from "../BodySectionWithMarginBottom/BodySectionWithMarginBottom.jsx";
+import BodySectionWithMarginBottom from "../BodySection/BodySectionWithMarginBottom.jsx";
 import BodySection from "../BodySection/BodySection.jsx";
 import { getLatestNotification } from "../utils/utils.js";
 import AppContext from "../Context/context.js";
 
 class App extends Component {
-  // Constructor: initialize component state
   constructor(props) {
     super(props);
-    // Initialize state with displayDrawer and user object
+
     this.state = {
       displayDrawer: false,
       user: {
@@ -21,31 +20,28 @@ class App extends Component {
         password: "",
         isLoggedIn: false,
       },
+      logOut: this.logOut,
     };
   }
 
-  // Handler to show the notifications drawer
   handleDisplayDrawer = () => {
     this.setState({ displayDrawer: true });
   };
 
-  // Handler to hide the notifications drawer
   handleHideDrawer = () => {
     this.setState({ displayDrawer: false });
   };
 
-  // Handler for user login - updates user state with credentials
   logIn = (email, password) => {
     this.setState({
       user: {
-        email: email,
-        password: password,
+        email,
+        password,
         isLoggedIn: true,
       },
     });
   };
 
-  // Handler for user logout - resets user state to default values
   logOut = () => {
     this.setState({
       user: {
@@ -56,17 +52,14 @@ class App extends Component {
     });
   };
 
-  // Lifecycle method: called after component is mounted to the DOM
   componentDidMount() {
     document.addEventListener("keydown", this.handleKeydown);
   }
 
-  // Lifecycle method: called before component is removed from the DOM
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeydown);
   }
 
-  // Event handler for keyboard shortcuts (Ctrl+H to logout)
   handleKeydown = (event) => {
     if (event.ctrlKey && event.key === "h") {
       alert("Logging you out");
@@ -75,71 +68,80 @@ class App extends Component {
   };
 
   render() {
-    // Use state instead of props for user login status
-    const { user } = this.state;
-    // const notificationsList = [];
+    const { user, displayDrawer } = this.state;
+
     const notificationsList = [
       {
-        id: Date.now(),
-        type: "urgent",
+        id: 1,
+        type: "default",
         value: "New course available",
       },
       {
-        id: Date.now() + 1,
-        type: "default",
+        id: 2,
+        type: "urgent",
         value: "New resume available",
       },
       {
-        id: Date.now() + 2,
-        type: "default",
+        id: 3,
+        type: "urgent",
         html: { __html: getLatestNotification() },
       },
     ];
 
-    const coursesList = [];
-    // const coursesList = [
-    //   { id: 1, name: "ES6", credit: 60 },
-    //   { id: 2, name: "Webpack", credit: 20 },
-    //   { id: 3, name: "React", credit: 40 },
-    // ];
-
-    // Create context value object (avoid creating inline to prevent unnecessary re-renders)
-    const contextValue = {
-      user: user,
-      logOut: this.logOut,
-    };
+    const coursesList = [
+      { id: 1, name: "ES6", credit: 60 },
+      { id: 2, name: "Webpack", credit: 20 },
+      { id: 3, name: "React", credit: 40 },
+    ];
 
     return (
-      <AppContext.Provider value={contextValue}>
+      <AppContext.Provider value={this.state}>
         <div className="App min-h-screen flex flex-col px-4 md:px-8">
           <Fragment>
             <div className="root-notifications">
               <Notifications
                 notifications={notificationsList}
-                displayDrawer={this.state.displayDrawer}
+                displayDrawer={displayDrawer}
                 handleDisplayDrawer={this.handleDisplayDrawer}
                 handleHideDrawer={this.handleHideDrawer}
               />
             </div>
+
             <Header />
-            <div className="red-line w-full h-[3px]" style={{ backgroundColor: 'var(--main-color)' }} />
+
+            <div
+              className="red-line w-full h-[3px]"
+              style={{ backgroundColor: "var(--main-color)" }}
+            />
+
             {user.isLoggedIn ? (
               <BodySectionWithMarginBottom title="Course list">
                 <CourseList courses={coursesList} />
               </BodySectionWithMarginBottom>
             ) : (
               <BodySectionWithMarginBottom title="Log in to continue">
-                <Login 
+                <Login
                   logIn={this.logIn}
                   email={user.email}
                   password={user.password}
                 />
               </BodySectionWithMarginBottom>
             )}
+
             <BodySection title="News from the School">
-              <p>ipsum Lorem ipsum dolor sit amet consectetur, adipisicing elit. Similique, asperiores architecto blanditiis fuga doloribus sit illum aliquid ea distinctio minus accusantium, impedit quo voluptatibus ut magni dicta. Recusandae, quia dicta?</p>
+              <p>
+                ipsum Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                Similique, asperiores architecto blanditiis fuga doloribus sit
+                illum aliquid ea distinctio minus accusantium, impedit quo
+                voluptatibus ut magni dicta. Recusandae, quia dicta?
+              </p>
             </BodySection>
-            <div className="red-line w-full h-[3px]" style={{ backgroundColor: 'var(--main-color)' }} />
+
+            <div
+              className="red-line w-full h-[3px]"
+              style={{ backgroundColor: "var(--main-color)" }}
+            />
+
             <Footer />
           </Fragment>
         </div>
