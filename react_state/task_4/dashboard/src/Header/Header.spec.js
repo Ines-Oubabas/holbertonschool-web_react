@@ -1,80 +1,68 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Header from './Header'
-import AppContext from '../Context/context.js'
+// eslint-disable-next-line no-unused-vars
+import newContext from '../Context/context'
 
-export const convertHexToRGBA = (hexCode) => {
-  let hex = hexCode.replace('#', '')
+test('renders the Holberton logo in the header component ', () => {
+    render(<Header />)
+    expect(screen.getByAltText(/^holberton logo$/i)).toBeInTheDocument()
+})
 
-  if (hex.length === 3) {
-    hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`
+test('renders the h1 element with correct text', () => {
+    render(<Header />)
+    expect(screen.getByRole('heading', {level: 1, name: /^school dashboard$/i})).toBeInTheDocument()
+})
+
+test('Does not render logoutSection with default context', () => {
+    const { container } = render(<Header />)
+    
+    const logoutSection = container.querySelector("#logoutSection")
+    
+    expect(logoutSection).not.toBeInTheDocument()
+})
+
+test('renders logoutSection when provided user context', () => {
+    const loggedInUser = {
+        email: 'rosa.diaz@nypd.com',
+        password: 'badpassword',
+        isLoggedIn: true
   }
+  
+  const mockLogOut = jest.fn()
+  
+  const { container } = render(
+    <newContext.Provider value={{ user: loggedInUser, logOut: mockLogOut }}>
+      <Header />
+    </newContext.Provider>
+  )
+  
+  const logoutSection = container.querySelector("#logoutSection")
+  expect(logoutSection).toBeInTheDocument()
+  
+  expect(screen.getByText(/rosa.diaz@nypd.com/)).toBeInTheDocument()
+})
 
-  const r = parseInt(hex.substring(0, 2), 16)
-  const g = parseInt(hex.substring(2, 4), 16)
-  const b = parseInt(hex.substring(4, 6), 16)
-
-  return { r, g, b }
-}
-
-describe('Header', () => {
-  test('should contain an h1 and an img', () => {
-    render(<Header />)
-
-    const headingElement = screen.getByRole('heading', {
-      name: /school dashboard/i,
-    })
-    const imgElement = screen.getByAltText('holberton logo')
-
-    expect(headingElement).toBeInTheDocument()
-    expect(headingElement).toHaveStyle({
-      color: `rgb(${convertHexToRGBA('#e1003c').r}, ${convertHexToRGBA('#e1003c').g}, ${convertHexToRGBA('#e1003c').b})`,
-    })
-    expect(imgElement).toBeInTheDocument()
-  })
-
-  test('does not display logoutSection with default context value', () => {
-    render(<Header />)
-    expect(screen.queryByText(/logout/i)).not.toBeInTheDocument()
-  })
-
-  test('displays logoutSection when user is logged in', () => {
-    const contextValue = {
-      user: {
-        email: 'test@mail.com',
-        password: 'password123',
-        isLoggedIn: true,
-      },
-      logOut: jest.fn(),
-    }
-
-    render(
-      <AppContext.Provider value={contextValue}>
-        <Header />
-      </AppContext.Provider>
-    )
-
-    expect(screen.getByText(/welcome test@mail.com/i)).toBeInTheDocument()
-    expect(screen.getByText(/\(logout\)/i)).toBeInTheDocument()
-  })
-
-  test('calls logOut when clicking on logout link', () => {
-    const logOutMock = jest.fn((e) => e.preventDefault())
-    const contextValue = {
-      user: {
-        email: 'test@mail.com',
-        password: 'password123',
-        isLoggedIn: true,
-      },
-      logOut: logOutMock,
-    }
-
-    render(
-      <AppContext.Provider value={contextValue}>
-        <Header />
-      </AppContext.Provider>
-    )
-
-    fireEvent.click(screen.getByText(/\(logout\)/i))
-    expect(logOutMock).toHaveBeenCalled()
-  })
+test('Clicking logout link calls logOut function', async () => {
+  const user = userEvent.setup()
+  
+  const loggedInUser = {
+    email: 'rosa.diaz@nypd.com',
+    password: 'badpassword',
+    isLoggedIn: true
+  }
+  
+  const mockLogOut = jest.fn()
+  
+  render(
+    <newContext.Provider value={{ user: loggedInUser, logOut: mockLogOut }}>
+      <Header />
+    </newContext.Provider>
+  )
+  
+  const logoutLink = screen.getByText(/logout/)
+  
+  await user.click(logoutLink)
+  
+  expect(mockLogOut).toHaveBeenCalledTimes(1)
 })

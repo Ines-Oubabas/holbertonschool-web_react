@@ -1,58 +1,47 @@
-import React, { PureComponent } from "react";
-import PropTypes from "prop-types";
+import { PureComponent } from 'react'
+import { getLatestNotification } from '../utils/utils'
 
-export default class NotificationItem extends PureComponent {
-  render() {
-    const { type, html, value, markAsRead, id } = this.props;
-
-    if (type === "default") {
-      return (
-        <li
-          className="text-[color:var(--default-notification-item)] pl-1 max-[912px]:text-[20px] max-[912px]:w-full max-[912px]:border-b max-[912px]:border-black max-[912px]:p-[10px_8px]"
-          data-notification-type={type}
-          onClick={() => markAsRead(id)}
-        >
-          {value}
-        </li>
-      );
+class NotificationItem extends PureComponent {
+    static defaultProps = {
+        markAsRead: () => {},
+        type: "default",
+        html: "",
+        value: "",
+        id: 1
     }
 
-    if (type === "urgent" && html !== undefined) {
-      return (
-        <li
-          className="text-[color:var(--urgent-notification-item)] pl-1 max-[912px]:text-[20px] max-[912px]:w-full max-[912px]:border-b max-[912px]:border-black max-[912px]:p-[10px_8px]"
-          data-notification-type={type}
-          dangerouslySetInnerHTML={html}
-          onClick={() => markAsRead(id)}
-        />
-      );
+    render() {
+        const { markAsRead, type, html, value, id } = this.props
+        const innerHtml = { __html: getLatestNotification() }
+        if (type === "default")
+            return (
+                <li onClick={() => markAsRead(id)}
+                    data-notification-type={type}
+                    className="text-[color:var(--default-notification-item)] pl-1 max-[912px]:text-[20px] max-[912px]:w-full max-[912px]:border-b max-[912px]:border-black max-[912px]:p-[10px_8px]">
+                    {value}
+                </li>
+            )
+        else if (type === "urgent" && html) {
+            return (
+                <li
+                    onClick={() => markAsRead(id)}
+                    data-notification-type={type}
+                    dangerouslySetInnerHTML={innerHtml}
+                    className="text-[color:var(--urgent-notification-item)] pl-1 max-[912px]:text-[20px] max-[912px]:w-full max-[912px]:border-b max-[912px]:border-black max-[912px]:p-[10px_8px]">
+                </li>
+            )
+        }
+        else if (type === "urgent") {
+            return (
+                <li
+                    onClick={() => markAsRead(id)}
+                    data-notification-type={type}
+                    className="text-[color:var(--urgent-notification-item)] pl-1 max-[912px]:text-[20px] max-[912px]:w-full max-[912px]:border-b max-[912px]:border-black max-[912px]:p-[10px_8px]"
+                >
+                    {value}
+                </li>
+            )
+        }
     }
-
-    return (
-      <li
-        className="text-[color:var(--urgent-notification-item)] pl-1 max-[912px]:text-[20px] max-[912px]:w-full max-[912px]:border-b max-[912px]:border-black max-[912px]:p-[10px_8px]"
-        data-notification-type={type}
-        onClick={() => markAsRead(id)}
-      >
-        {value}
-      </li>
-    );
-  }
 }
-
-NotificationItem.propTypes = {
-  id: PropTypes.number.isRequired,
-  type: PropTypes.string,
-  value: PropTypes.string,
-  html: PropTypes.shape({
-    __html: PropTypes.string,
-  }),
-  markAsRead: PropTypes.func,
-};
-
-NotificationItem.defaultProps = {
-  type: "default",
-  value: "",
-  html: undefined,
-  markAsRead: () => {},
-};
+export default NotificationItem

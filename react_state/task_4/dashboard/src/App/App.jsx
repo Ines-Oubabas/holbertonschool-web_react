@@ -1,116 +1,99 @@
-import { Component, Fragment } from "react";
-import Notifications from "../Notifications/Notifications.jsx";
-import Header from "../Header/Header.jsx";
-import Login from "../Login/Login.jsx";
-import Footer from "../Footer/Footer.jsx";
-import CourseList from "../CourseList/CourseList.jsx";
-import BodySectionWithMarginBottom from "../BodySection/BodySectionWithMarginBottom.jsx";
-import BodySection from "../BodySection/BodySection.jsx";
-import { getLatestNotification } from "../utils/utils.js";
-import AppContext from "../Context/context.js";
+import React from 'react'
+import BodySection from '../BodySection/BodySection'
+import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom'
+import Notifications from '../Notifications/Notifications'
+import Header from '../Header/Header'
+import LoginWithLogging from '../Login/Login'
+import Footer from '../Footer/Footer'
+import CourseListWithLogging from '../CourseList/CourseList'
+import { getLatestNotification } from '../utils/utils'
+// eslint-disable-next-line no-unused-vars
+import newContext from '../Context/context'
 
-class App extends Component {
+class App extends React.Component {
   constructor(props) {
-    super(props);
-
+    super(props)
     this.state = {
-      displayDrawer: false,
+      displayDrawer: true,
       user: {
-        email: "",
-        password: "",
-        isLoggedIn: false,
+        email: '',
+        password: '',
+        isLoggedIn: false
       },
-      logOut: this.logOut,
       notifications: [
-        {
-          id: 1,
-          type: "default",
-          value: "New course available",
-        },
-        {
-          id: 2,
-          type: "urgent",
-          value: "New resume available",
-        },
-        {
-          id: 3,
-          type: "urgent",
-          html: { __html: getLatestNotification() },
-        },
+        { id: 1, type: 'default', value: 'New course available' },
+        { id: 2, type: 'urgent', value: 'New resume available' },
+        { id: 3, type: 'urgent', html: { __html: getLatestNotification() } }
       ],
       courses: [
-        { id: 1, name: "ES6", credit: 60 },
-        { id: 2, name: "Webpack", credit: 20 },
-        { id: 3, name: "React", credit: 40 },
-      ],
-    };
+        { id: 1, name: 'ES6', credit: 60 },
+        { id: 2, name: 'Webpack', credit: 20 },
+        { id: 3, name: 'React', credit: 40 }
+      ]
+    }
   }
-
-  handleDisplayDrawer = () => {
-    this.setState({ displayDrawer: true });
-  };
-
-  handleHideDrawer = () => {
-    this.setState({ displayDrawer: false });
-  };
 
   logIn = (email, password) => {
     this.setState({
       user: {
-        email,
-        password,
+        email: email,
+        password: password,
         isLoggedIn: true,
-      },
-    });
-  };
+      }
+    })
+  }
 
-  logOut = (event) => {
-    if (event) event.preventDefault();
-
+  logOut = () => {
     this.setState({
       user: {
-        email: "",
-        password: "",
+
+        email: '',
+        password: '',
         isLoggedIn: false,
-      },
-    });
-  };
-
-  markNotificationAsRead = (id) => {
-    console.log(`Notification ${id} has been marked as read`);
-
-    const updatedNotifications = this.state.notifications.filter(
-      (notification) => notification.id !== id
-    );
-
-    this.setState({
-      notifications: updatedNotifications,
-    });
-  };
+      }
+    })
+  }
+  handleLogout = (event) => {
+    if (event.ctrlKey && event.key === "h") {
+      alert('Logging you out')
+      this.logOut()
+    }
+  }
 
   componentDidMount() {
-    document.addEventListener("keydown", this.handleKeydown);
+    document.addEventListener("keydown", this.handleLogout)
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKeydown);
+    document.removeEventListener("keydown", this.handleLogout)
   }
 
-  handleKeydown = (event) => {
-    if (event.ctrlKey && event.key === "h") {
-      alert("Logging you out");
-      this.logOut();
-    }
-  };
+  handleDisplayDrawer = () => {
+    this.setState({ displayDrawer: true })
+  }
+
+  handleHideDrawer = () => {
+    this.setState({ displayDrawer: false })
+  }
+
+  markNotificationAsRead = (id) => {
+    console.log(`Notification ${id} has been marked as read`)
+    const updatedNotifications = this.state.notifications.filter(notification => notification.id !== id)
+
+    this.setState({ notifications: updatedNotifications })
+  }
 
   render() {
-    const { user, displayDrawer, notifications, courses } = this.state;
+    const { displayDrawer, user, notifications, courses } = this.state
 
     return (
-      <AppContext.Provider value={this.state}>
-        <div className="App min-h-screen flex flex-col px-4 md:px-8">
-          <Fragment>
-            <div className="root-notifications">
+      <>
+        <newContext.Provider value={{
+          user: this.state.user,
+          logOut: this.logOut
+        }}>
+          <div className="relative px-3 min-h-screen flex flex-col">
+            <div className="absolute top-0 right-0 z-10">
               <Notifications
                 notifications={notifications}
                 displayDrawer={displayDrawer}
@@ -119,48 +102,28 @@ class App extends Component {
                 markNotificationAsRead={this.markNotificationAsRead}
               />
             </div>
-
-            <Header />
-
-            <div
-              className="red-line w-full h-[3px]"
-              style={{ backgroundColor: "var(--main-color)" }}
-            />
-
-            {user.isLoggedIn ? (
-              <BodySectionWithMarginBottom title="Course list">
-                <CourseList courses={courses} />
-              </BodySectionWithMarginBottom>
-            ) : (
-              <BodySectionWithMarginBottom title="Log in to continue">
-                <Login
-                  logIn={this.logIn}
-                  email={user.email}
-                  password={user.password}
-                />
-              </BodySectionWithMarginBottom>
-            )}
-
-            <BodySection title="News from the School">
-              <p>
-                ipsum Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Similique, asperiores architecto blanditiis fuga doloribus sit
-                illum aliquid ea distinctio minus accusantium, impedit quo
-                voluptatibus ut magni dicta. Recusandae, quia dicta?
-              </p>
-            </BodySection>
-
-            <div
-              className="red-line w-full h-[3px]"
-              style={{ backgroundColor: "var(--main-color)" }}
-            />
-
+            <div className="flex-1">
+              <Header />
+              {user.isLoggedIn ? (
+                <BodySectionWithMarginBottom title="Course list">
+                  <CourseListWithLogging courses={courses} />
+                </BodySectionWithMarginBottom>
+              ) : (
+                <BodySectionWithMarginBottom title="Log in to continue">
+                  <LoginWithLogging logIn={this.logIn} email={user.email} password={user.password} />
+                </BodySectionWithMarginBottom>
+              )
+              }
+              <BodySection title="News from the School">
+                <p>
+                  ipsum Lorem ipsum dolor sit amet consectetur, adipisicing elit. Similique, asperiores architecto blanditiis fuga doloribus sit illum aliquid ea distinctio minus accusantium, impedit quo voluptatibus ut magni dicta. Recusandae, quia dicta?              </p>
+              </BodySection>
+            </div>
             <Footer />
-          </Fragment>
-        </div>
-      </AppContext.Provider>
-    );
+          </div>
+        </newContext.Provider>
+      </>
+    )
   }
 }
-
-export default App;
+export default App
