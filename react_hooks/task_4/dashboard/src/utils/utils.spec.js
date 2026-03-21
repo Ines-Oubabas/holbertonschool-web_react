@@ -1,25 +1,18 @@
-// task_3/dashboard/src/utils.spec.js
-import {
-  getCurrentYear,
-  getFooterCopy,
-  getLatestNotification,
-} from './utils.js';
+import {expect, test} from '@jest/globals';
+import { getCurrentYear, getFooterCopy, getLatestNotification } from './utils'
 
-describe('utils', () => {
-  test('getCurrentYear returns the current year', () => {
-    const y = new Date().getFullYear();     // évite la "time bomb"
-    expect(getCurrentYear()).toBe(y);
-  });
+test('the current year value', () => {
+    const currentYear = new Date().getFullYear()
+    expect(getCurrentYear()).toBe(currentYear)
+})
 
-  test.each([
-    [true,  'Holberton School'],
-    [false, 'Holberton School main dashboard'],
-  ])('getFooterCopy(%s) returns "%s"', (arg, expected) => {
-    expect(getFooterCopy(arg)).toBe(expected);
-  });
+test('the return value of getFooterCopy depending on the boolean parameter', () => {
+    const isIndexFalse = getFooterCopy(false)
+    expect(isIndexFalse).toBe("Holberton School main dashboard")
+    const isIndexTrue = getFooterCopy(true)
+    expect(isIndexTrue).toBe("Holberton School")
+})
 
-  test('getLatestNotification returns the required HTML string', () => {
-    expect(getLatestNotification())
-      .toBe('<strong>Urgent requirement</strong> - complete by EOD');
-  });
-});
+test('the return string from getLatestNotification', () => {
+    expect(getLatestNotification()).toBe("<strong>Urgent requirement</strong> - complete by EOD")
+})
