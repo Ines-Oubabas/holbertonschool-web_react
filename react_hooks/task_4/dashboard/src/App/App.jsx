@@ -7,7 +7,10 @@ import Header from '../Header/Header'
 import LoginWithLogging from '../Login/Login'
 import Footer from '../Footer/Footer'
 import CourseListWithLogging from '../CourseList/CourseList'
-import { getLatestNotification } from '../utils/utils'
+import {
+  getLatestNotification,
+  logNotificationRead
+} from '../utils/utils'
 import AppContext from '../Context/context'
 
 function App() {
@@ -81,7 +84,7 @@ function App() {
   }, [])
 
   const markNotificationAsRead = React.useCallback((id) => {
-    console.log(`Notification ${id} has been marked as read`)
+    logNotificationRead(id)
     setNotifications((prevNotifications) =>
       prevNotifications.filter((notification) => notification.id !== id)
     )
