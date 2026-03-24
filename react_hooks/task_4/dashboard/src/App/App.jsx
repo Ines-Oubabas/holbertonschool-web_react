@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React from 'react'
 import axios from 'axios'
 import BodySection from '../BodySection/BodySection'
 import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom'
@@ -17,13 +17,13 @@ function App() {
     { id: 3, type: 'urgent', html: { __html: getLatestNotification() } }
   ]
 
-  const [displayDrawer, setDisplayDrawer] = useState(true)
-  const [user, setUser] = useState({
+  const [displayDrawer, setDisplayDrawer] = React.useState(true)
+  const [user, setUser] = React.useState({
     email: '',
     password: '',
     isLoggedIn: false
   })
-  const [notifications, setNotifications] = useState(defaultNotifications)
+  const [notifications, setNotifications] = React.useState(defaultNotifications)
 
   const courses = [
     { id: 1, name: 'ES6', credit: 60 },
@@ -31,7 +31,7 @@ function App() {
     { id: 3, name: 'React', credit: 40 }
   ]
 
-  const logIn = useCallback((email, password) => {
+  const logIn = React.useCallback((email, password) => {
     setUser({
       email,
       password,
@@ -39,7 +39,7 @@ function App() {
     })
   }, [])
 
-  const logOut = useCallback(() => {
+  const logOut = React.useCallback(() => {
     setUser({
       email: '',
       password: '',
@@ -47,22 +47,23 @@ function App() {
     })
   }, [])
 
-  const handleKeyDown = useCallback((event) => {
+  const handleKeyDown = React.useCallback((event) => {
     if (event.ctrlKey && event.key === 'h') {
       alert('Logging you out')
       logOut()
     }
   }, [logOut])
 
-  useEffect(() => {
+  React.useEffect(() => {
     document.addEventListener('keydown', handleKeyDown)
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
   }, [handleKeyDown])
 
-  useEffect(() => {
-    axios.get('/notifications.json')
+  React.useEffect(() => {
+    axios
+      .get('/notifications.json')
       .then((response) => {
         if (response.data && Array.isArray(response.data)) {
           setNotifications(response.data)
@@ -71,22 +72,22 @@ function App() {
       .catch(() => {})
   }, [])
 
-  const handleDisplayDrawer = useCallback(() => {
+  const handleDisplayDrawer = React.useCallback(() => {
     setDisplayDrawer(true)
   }, [])
 
-  const handleHideDrawer = useCallback(() => {
+  const handleHideDrawer = React.useCallback(() => {
     setDisplayDrawer(false)
   }, [])
 
-  const markNotificationAsRead = useCallback((id) => {
+  const markNotificationAsRead = React.useCallback((id) => {
     console.log(`Notification ${id} has been marked as read`)
     setNotifications((prevNotifications) =>
       prevNotifications.filter((notification) => notification.id !== id)
     )
   }, [])
 
-  const contextValue = useMemo(() => ({
+  const contextValue = React.useMemo(() => ({
     user,
     logOut
   }), [user, logOut])
