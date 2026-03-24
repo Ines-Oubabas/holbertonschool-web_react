@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import axios from 'axios'
 import BodySection from '../BodySection/BodySection'
 import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom'
 import Notifications from '../Notifications/Notifications'
@@ -10,17 +11,19 @@ import { getLatestNotification } from '../utils/utils'
 import AppContext from '../Context/context'
 
 function App() {
+  const defaultNotifications = [
+    { id: 1, type: 'default', value: 'New course available' },
+    { id: 2, type: 'urgent', value: 'New resume available' },
+    { id: 3, type: 'urgent', html: { __html: getLatestNotification() } }
+  ]
+
   const [displayDrawer, setDisplayDrawer] = useState(true)
   const [user, setUser] = useState({
     email: '',
     password: '',
     isLoggedIn: false
   })
-  const [notifications, setNotifications] = useState([
-    { id: 1, type: 'default', value: 'New course available' },
-    { id: 2, type: 'urgent', value: 'New resume available' },
-    { id: 3, type: 'urgent', html: { __html: getLatestNotification() } }
-  ])
+  const [notifications, setNotifications] = useState(defaultNotifications)
 
   const courses = [
     { id: 1, name: 'ES6', credit: 60 },
@@ -57,6 +60,16 @@ function App() {
       document.removeEventListener('keydown', handleKeyDown)
     }
   }, [handleKeyDown])
+
+  useEffect(() => {
+    axios.get('/notifications.json')
+      .then((response) => {
+        if (response.data && Array.isArray(response.data)) {
+          setNotifications(response.data)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   const handleDisplayDrawer = useCallback(() => {
     setDisplayDrawer(true)
