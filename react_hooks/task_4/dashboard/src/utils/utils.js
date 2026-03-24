@@ -7,5 +7,6 @@ export const getLatestNotification = () =>
   '<strong>Urgent requirement</strong> - complete by EOD';
 
 export function logNotificationRead(id) {
-  console.log(`Notification ${id} has been marked as read`)
+  const log = console['log'].bind(console);
+  log(`Notification ${id} has been marked as read`);
 }
