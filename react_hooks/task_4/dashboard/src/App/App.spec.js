@@ -14,10 +14,13 @@ afterEach(() => {
   mockAxios.reset()
 })
 
+const notificationsUrl = `${window.location.origin}/notifications.json`
+const coursesUrl = `${window.location.origin}/courses.json`
+
 test('Renders login and copyright paragraph with the correct content', () => {
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
+  mockAxios.mockResponseFor({ url: notificationsUrl }, {
     data: [
       { id: 1, type: 'default', value: 'New course available' },
       { id: 2, type: 'urgent', value: 'New resume available' },
@@ -32,7 +35,7 @@ test('Renders login and copyright paragraph with the correct content', () => {
 test('Renders Email and Password label element', () => {
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
+  mockAxios.mockResponseFor({ url: notificationsUrl }, {
     data: []
   })
 
@@ -43,7 +46,7 @@ test('Renders Email and Password label element', () => {
 test('Renders the Login component when isLoggedIn is false', () => {
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
+  mockAxios.mockResponseFor({ url: notificationsUrl }, {
     data: []
   })
 
@@ -54,7 +57,7 @@ test('Renders the CourseList component when isLoggedIn is true', async () => {
   const user = userEvent.setup()
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
+  mockAxios.mockResponseFor({ url: notificationsUrl }, {
     data: [
       { id: 1, type: 'default', value: 'New course available' }
     ]
@@ -68,7 +71,7 @@ test('Renders the CourseList component when isLoggedIn is true', async () => {
   await user.type(passwordInput, 'verybadpassword')
   await user.click(submitButton)
 
-  mockAxios.mockResponseFor({ url: '/courses.json' }, {
+  mockAxios.mockResponseFor({ url: coursesUrl }, {
     data: [
       { id: 1, name: 'ES6', credit: 60 },
       { id: 2, name: 'Webpack', credit: 20 },
@@ -86,7 +89,7 @@ test('Verify that alert is called once when ctrl+h are pressed', () => {
 
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
+  mockAxios.mockResponseFor({ url: notificationsUrl }, {
     data: []
   })
 
@@ -102,7 +105,7 @@ test('Checks that alert function is called with "Logging you out" message', () =
 
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
+  mockAxios.mockResponseFor({ url: notificationsUrl }, {
     data: []
   })
 
@@ -118,7 +121,7 @@ test('Checks that alert function is called with "Logging you out" message', () =
 test('Checks that a title with the text News from the School is displayed by default in the App component', () => {
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
+  mockAxios.mockResponseFor({ url: notificationsUrl }, {
     data: []
   })
 
@@ -131,7 +134,7 @@ test('Checks that login method prop is correctly called with the user’s email 
 
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
+  mockAxios.mockResponseFor({ url: notificationsUrl }, {
     data: [
       { id: 1, type: 'default', value: 'New course available' }
     ]
@@ -148,7 +151,7 @@ test('Checks that login method prop is correctly called with the user’s email 
   await user.type(passwordInput, 'verybadpassword')
   await user.click(submitButton)
 
-  mockAxios.mockResponseFor({ url: '/courses.json' }, {
+  mockAxios.mockResponseFor({ url: coursesUrl }, {
     data: [
       { id: 1, name: 'ES6', credit: 60 },
       { id: 2, name: 'Webpack', credit: 20 },
@@ -168,7 +171,7 @@ test('Clicking on a notification item removes it from the list and logs the expe
 
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
+  mockAxios.mockResponseFor({ url: notificationsUrl }, {
     data: [
       { id: 1, type: 'default', value: 'New course available' },
       { id: 2, type: 'urgent', value: 'New resume available' },

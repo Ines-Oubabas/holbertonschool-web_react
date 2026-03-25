@@ -23,6 +23,9 @@ function App() {
   const [notifications, setNotifications] = React.useState([])
   const [courses, setCourses] = React.useState([])
 
+  const notificationsUrl = `${window.location.origin}/notifications.json`
+  const coursesUrl = `${window.location.origin}/courses.json`
+
   const logIn = React.useCallback((email, password) => {
     setUser({
       email,
@@ -37,7 +40,6 @@ function App() {
       password: '',
       isLoggedIn: false
     })
-    setCourses([])
   }, [])
 
   const handleKeyDown = React.useCallback((event) => {
@@ -60,7 +62,7 @@ function App() {
 
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get('/notifications.json')
+        const response = await axios.get(notificationsUrl)
 
         if (!isMounted || !Array.isArray(response.data)) {
           return
@@ -89,20 +91,14 @@ function App() {
     return () => {
       isMounted = false
     }
-  }, [])
+  }, [notificationsUrl])
 
   React.useEffect(() => {
     let isMounted = true
 
-    if (!user.isLoggedIn) {
-      return () => {
-        isMounted = false
-      }
-    }
-
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('/courses.json')
+        const response = await axios.get(coursesUrl)
 
         if (isMounted && Array.isArray(response.data)) {
           setCourses(response.data)
@@ -114,12 +110,14 @@ function App() {
       }
     }
 
-    fetchCourses()
+    if (user.isLoggedIn) {
+      fetchCourses()
+    }
 
     return () => {
       isMounted = false
     }
-  }, [user])
+  }, [user, coursesUrl])
 
   const handleDisplayDrawer = React.useCallback(() => {
     setDisplayDrawer(true)
