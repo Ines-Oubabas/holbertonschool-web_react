@@ -14,25 +14,14 @@ import {
 import AppContext from '../Context/context'
 
 function App() {
-  const defaultNotifications = [
-    { id: 1, type: 'default', value: 'New course available' },
-    { id: 2, type: 'urgent', value: 'New resume available' },
-    { id: 3, type: 'urgent', html: { __html: getLatestNotification() } }
-  ]
-
   const [displayDrawer, setDisplayDrawer] = React.useState(true)
   const [user, setUser] = React.useState({
     email: '',
     password: '',
     isLoggedIn: false
   })
-  const [notifications, setNotifications] = React.useState(defaultNotifications)
-
-  const courses = [
-    { id: 1, name: 'ES6', credit: 60 },
-    { id: 2, name: 'Webpack', credit: 20 },
-    { id: 3, name: 'React', credit: 40 }
-  ]
+  const [notifications, setNotifications] = React.useState([])
+  const [courses, setCourses] = React.useState([])
 
   const logIn = React.useCallback((email, password) => {
     setUser({
@@ -59,21 +48,71 @@ function App() {
 
   React.useEffect(() => {
     document.addEventListener('keydown', handleKeyDown)
+
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
   }, [handleKeyDown])
 
   React.useEffect(() => {
-    axios
-      .get('/notifications.json')
-      .then((response) => {
-        if (response.data && Array.isArray(response.data)) {
-          setNotifications(response.data)
+    let isMounted = true
+
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get('/notifications.json')
+
+        if (!isMounted || !Array.isArray(response.data)) {
+          return
         }
-      })
-      .catch(() => {})
+
+        const updatedNotifications = response.data.map((notification) => {
+          if (notification.html) {
+            return {
+              ...notification,
+              html: { __html: getLatestNotification() }
+            }
+          }
+          return notification
+        })
+
+        setNotifications(updatedNotifications)
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console['error'](error)
+        }
+      }
+    }
+
+    fetchNotifications()
+
+    return () => {
+      isMounted = false
+    }
   }, [])
+
+  React.useEffect(() => {
+    let isMounted = true
+
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get('/courses.json')
+
+        if (isMounted && Array.isArray(response.data)) {
+          setCourses(response.data)
+        }
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console['error'](error)
+        }
+      }
+    }
+
+    fetchCourses()
+
+    return () => {
+      isMounted = false
+    }
+  }, [user])
 
   const handleDisplayDrawer = React.useCallback(() => {
     setDisplayDrawer(true)
