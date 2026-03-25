@@ -58,9 +58,10 @@ function App() {
   React.useEffect(() => {
     let isMounted = true
 
-    axios
-      .get('http://localhost:5173/notifications.json')
-      .then((response) => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get('/notifications.json')
+
         if (!isMounted || !Array.isArray(response.data)) {
           return
         }
@@ -76,8 +77,14 @@ function App() {
         })
 
         setNotifications(updatedNotifications)
-      })
-      .catch(() => {})
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console['error'](error)
+        }
+      }
+    }
+
+    fetchNotifications()
 
     return () => {
       isMounted = false
@@ -93,19 +100,26 @@ function App() {
       }
     }
 
-    axios
-      .get('http://localhost:5173/courses.json')
-      .then((response) => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get('/courses.json')
+
         if (isMounted && Array.isArray(response.data)) {
           setCourses(response.data)
         }
-      })
-      .catch(() => {})
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console['error'](error)
+        }
+      }
+    }
+
+    fetchCourses()
 
     return () => {
       isMounted = false
     }
-  }, [user.isLoggedIn])
+  }, [user])
 
   const handleDisplayDrawer = React.useCallback(() => {
     setDisplayDrawer(true)
