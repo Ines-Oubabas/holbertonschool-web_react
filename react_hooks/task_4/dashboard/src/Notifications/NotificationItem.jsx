@@ -1,7 +1,7 @@
 import { memo } from 'react'
 
 const NotificationItem = memo(function NotificationItem({
-  markAsRead = () => {},
+  markAsRead = () => null,
   type = 'default',
   html = null,
   value = '',
