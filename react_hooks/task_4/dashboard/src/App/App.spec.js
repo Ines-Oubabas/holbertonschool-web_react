@@ -14,22 +14,14 @@ afterEach(() => {
   mockAxios.reset()
 })
 
-test('Renders login and copyright paragraph with the correct content', async () => {
+test('Renders login and copyright paragraph with the correct content', () => {
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
+  mockAxios.mockResponseFor({ url: 'http://localhost:5173/notifications.json' }, {
     data: [
       { id: 1, type: 'default', value: 'New course available' },
       { id: 2, type: 'urgent', value: 'New resume available' },
       { id: 3, type: 'urgent', html: { __html: 'Urgent requirement - complete by EOD' } }
-    ]
-  })
-
-  mockAxios.mockResponseFor({ url: '/courses.json' }, {
-    data: [
-      { id: 1, name: 'ES6', credit: 60 },
-      { id: 2, name: 'Webpack', credit: 20 },
-      { id: 3, name: 'React', credit: 40 }
     ]
   })
 
@@ -40,10 +32,7 @@ test('Renders login and copyright paragraph with the correct content', async () 
 test('Renders Email and Password label element', () => {
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
-    data: []
-  })
-  mockAxios.mockResponseFor({ url: '/courses.json' }, {
+  mockAxios.mockResponseFor({ url: 'http://localhost:5173/notifications.json' }, {
     data: []
   })
 
@@ -54,10 +43,7 @@ test('Renders Email and Password label element', () => {
 test('Renders the Login component when isLoggedIn is false', () => {
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
-    data: []
-  })
-  mockAxios.mockResponseFor({ url: '/courses.json' }, {
+  mockAxios.mockResponseFor({ url: 'http://localhost:5173/notifications.json' }, {
     data: []
   })
 
@@ -68,17 +54,9 @@ test('Renders the CourseList component when isLoggedIn is true', async () => {
   const user = userEvent.setup()
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
+  mockAxios.mockResponseFor({ url: 'http://localhost:5173/notifications.json' }, {
     data: [
       { id: 1, type: 'default', value: 'New course available' }
-    ]
-  })
-
-  mockAxios.mockResponseFor({ url: '/courses.json' }, {
-    data: [
-      { id: 1, name: 'ES6', credit: 60 },
-      { id: 2, name: 'Webpack', credit: 20 },
-      { id: 3, name: 'React', credit: 40 }
     ]
   })
 
@@ -90,7 +68,7 @@ test('Renders the CourseList component when isLoggedIn is true', async () => {
   await user.type(passwordInput, 'verybadpassword')
   await user.click(submitButton)
 
-  mockAxios.mockResponseFor({ url: '/courses.json' }, {
+  mockAxios.mockResponseFor({ url: 'http://localhost:5173/courses.json' }, {
     data: [
       { id: 1, name: 'ES6', credit: 60 },
       { id: 2, name: 'Webpack', credit: 20 },
@@ -108,10 +86,7 @@ test('Verify that alert is called once when ctrl+h are pressed', () => {
 
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
-    data: []
-  })
-  mockAxios.mockResponseFor({ url: '/courses.json' }, {
+  mockAxios.mockResponseFor({ url: 'http://localhost:5173/notifications.json' }, {
     data: []
   })
 
@@ -127,10 +102,7 @@ test('Checks that alert function is called with "Logging you out" message', () =
 
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
-    data: []
-  })
-  mockAxios.mockResponseFor({ url: '/courses.json' }, {
+  mockAxios.mockResponseFor({ url: 'http://localhost:5173/notifications.json' }, {
     data: []
   })
 
@@ -146,10 +118,7 @@ test('Checks that alert function is called with "Logging you out" message', () =
 test('Checks that a title with the text News from the School is displayed by default in the App component', () => {
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
-    data: []
-  })
-  mockAxios.mockResponseFor({ url: '/courses.json' }, {
+  mockAxios.mockResponseFor({ url: 'http://localhost:5173/notifications.json' }, {
     data: []
   })
 
@@ -162,17 +131,9 @@ test('Checks that login method prop is correctly called with the user’s email 
 
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
+  mockAxios.mockResponseFor({ url: 'http://localhost:5173/notifications.json' }, {
     data: [
       { id: 1, type: 'default', value: 'New course available' }
-    ]
-  })
-
-  mockAxios.mockResponseFor({ url: '/courses.json' }, {
-    data: [
-      { id: 1, name: 'ES6', credit: 60 },
-      { id: 2, name: 'Webpack', credit: 20 },
-      { id: 3, name: 'React', credit: 40 }
     ]
   })
 
@@ -187,7 +148,7 @@ test('Checks that login method prop is correctly called with the user’s email 
   await user.type(passwordInput, 'verybadpassword')
   await user.click(submitButton)
 
-  mockAxios.mockResponseFor({ url: '/courses.json' }, {
+  mockAxios.mockResponseFor({ url: 'http://localhost:5173/courses.json' }, {
     data: [
       { id: 1, name: 'ES6', credit: 60 },
       { id: 2, name: 'Webpack', credit: 20 },
@@ -207,16 +168,12 @@ test('Clicking on a notification item removes it from the list and logs the expe
 
   render(<App />)
 
-  mockAxios.mockResponseFor({ url: '/notifications.json' }, {
+  mockAxios.mockResponseFor({ url: 'http://localhost:5173/notifications.json' }, {
     data: [
       { id: 1, type: 'default', value: 'New course available' },
       { id: 2, type: 'urgent', value: 'New resume available' },
       { id: 3, type: 'urgent', html: { __html: 'Urgent requirement - complete by EOD' } }
     ]
-  })
-
-  mockAxios.mockResponseFor({ url: '/courses.json' }, {
-    data: []
   })
 
   const notificationItem = await screen.findByText(/new course available/i)

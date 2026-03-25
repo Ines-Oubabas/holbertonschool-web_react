@@ -37,6 +37,7 @@ function App() {
       password: '',
       isLoggedIn: false
     })
+    setCourses([])
   }, [])
 
   const handleKeyDown = React.useCallback((event) => {
@@ -57,10 +58,9 @@ function App() {
   React.useEffect(() => {
     let isMounted = true
 
-    const fetchNotifications = async () => {
-      try {
-        const response = await axios.get('/notifications.json')
-
+    axios
+      .get('http://localhost:5173/notifications.json')
+      .then((response) => {
         if (!isMounted || !Array.isArray(response.data)) {
           return
         }
@@ -76,14 +76,8 @@ function App() {
         })
 
         setNotifications(updatedNotifications)
-      } catch (error) {
-        if (process.env.NODE_ENV === 'development') {
-          console['error'](error)
-        }
-      }
-    }
-
-    fetchNotifications()
+      })
+      .catch(() => {})
 
     return () => {
       isMounted = false
@@ -93,26 +87,25 @@ function App() {
   React.useEffect(() => {
     let isMounted = true
 
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get('/courses.json')
-
-        if (isMounted && Array.isArray(response.data)) {
-          setCourses(response.data)
-        }
-      } catch (error) {
-        if (process.env.NODE_ENV === 'development') {
-          console['error'](error)
-        }
+    if (!user.isLoggedIn) {
+      return () => {
+        isMounted = false
       }
     }
 
-    fetchCourses()
+    axios
+      .get('http://localhost:5173/courses.json')
+      .then((response) => {
+        if (isMounted && Array.isArray(response.data)) {
+          setCourses(response.data)
+        }
+      })
+      .catch(() => {})
 
     return () => {
       isMounted = false
     }
-  }, [user])
+  }, [user.isLoggedIn])
 
   const handleDisplayDrawer = React.useCallback(() => {
     setDisplayDrawer(true)
