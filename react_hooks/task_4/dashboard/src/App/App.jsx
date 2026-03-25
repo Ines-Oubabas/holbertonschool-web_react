@@ -20,39 +20,46 @@ function App() {
   const [notifications, setNotifications] = useState([])
   const [courses, setCourses] = useState([])
 
+  const notificationsUrl = `${window.location.origin}/notifications.json`
+  const coursesUrl = `${window.location.origin}/courses.json`
+
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get('/notifications.json')
+        const response = await axios.get(notificationsUrl)
 
-        if (Array.isArray(response.data)) {
-          const updatedNotifications = response.data.map((notif) => {
-            if (notif.html) {
-              return {
-                ...notif,
-                html: { __html: getLatestNotification() }
-              }
+        const fetchedNotifications = Array.isArray(response.data)
+          ? response.data
+          : response.data?.notifications || []
+
+        const updatedNotifications = fetchedNotifications.map((notif) => {
+          if (notif.html) {
+            return {
+              ...notif,
+              html: { __html: getLatestNotification() }
             }
-            return notif
-          })
+          }
+          return notif
+        })
 
-          setNotifications(updatedNotifications)
-        }
+        setNotifications(updatedNotifications)
       } catch (error) {
       }
     }
 
     fetchNotifications()
-  }, [])
+  }, [notificationsUrl])
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('/courses.json')
+        const response = await axios.get(coursesUrl)
 
-        if (Array.isArray(response.data)) {
-          setCourses(response.data)
-        }
+        const fetchedCourses = Array.isArray(response.data)
+          ? response.data
+          : response.data?.courses || []
+
+        setCourses(fetchedCourses)
       } catch (error) {
       }
     }
@@ -60,7 +67,7 @@ function App() {
     if (user.isLoggedIn) {
       fetchCourses()
     }
-  }, [user])
+  }, [user.isLoggedIn, coursesUrl])
 
   const logIn = useCallback((email, password) => {
     setUser({
@@ -110,8 +117,10 @@ function App() {
             markNotificationAsRead={markNotificationAsRead}
           />
         </div>
+
         <div className="flex-1">
           <Header />
+
           {user.isLoggedIn ? (
             <BodySectionWithMarginBottom title="Course list">
               <CourseListWithLogging courses={courses} />
@@ -125,6 +134,7 @@ function App() {
               />
             </BodySectionWithMarginBottom>
           )}
+
           <BodySection title="News from the School">
             <p>
               ipsum Lorem ipsum dolor sit amet consectetur, adipisicing elit.
@@ -134,6 +144,7 @@ function App() {
             </p>
           </BodySection>
         </div>
+
         <Footer />
       </div>
     </AppContext.Provider>
