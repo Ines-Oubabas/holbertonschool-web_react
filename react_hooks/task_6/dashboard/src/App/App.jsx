@@ -1,152 +1,105 @@
-import { useEffect, useReducer, useCallback } from 'react'
-import axios from 'axios'
-import { StyleSheet, css } from 'aphrodite'
-import Notifications from '../Notifications/Notifications'
-import Footer from '../Footer/Footer'
-import Header from '../Header/Header'
-import Login from '../Login/Login'
-import CourseList from '../CourseList/CourseList'
-import { getLatestNotification } from '../utils/utils'
-import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom'
-import BodySection from '../BodySection/BodySection'
-import { appReducer, initialState, APP_ACTIONS } from './appReducer'
+import { useReducer, useCallback, useEffect } from 'react';
+import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5173'
-const ENDPOINTS = {
-  courses: `${API_BASE_URL}/courses.json`,
-  notifications: `${API_BASE_URL}/notifications.json`
-}
+import Notifications from '../Notifications/Notifications';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
+import Login from '../Login/Login';
+import CourseList from '../CourseList/CourseList';
+import { getLatestNotification } from '../utils/utils';
 
-const styles = StyleSheet.create({
-  app: {
-    position: 'relative'
-  }
-})
+import BodySection from '../BodySection/BodySection';
+import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom';
+import { appReducer, initialState, APP_ACTIONS } from './appReducer';
 
-export default function App() {
-  const [state, dispatch] = useReducer(appReducer, initialState)
-  const { displayDrawer, user, notifications, courses } = state
+function App() {
+  const [state, dispatch] = useReducer(appReducer, initialState);
+  const { displayDrawer, user, notifications, courses } = state;
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get(ENDPOINTS.notifications)
-        const currentNotifications = response.data.notifications || []
-
-        const updatedNotifications = currentNotifications.map((notification) =>
-          notification.id === 3
-            ? {
-                ...notification,
-                html: { __html: getLatestNotification() }
-              }
-            : notification
-        )
-
-        dispatch({
-          type: APP_ACTIONS.SET_NOTIFICATIONS,
-          notifications: updatedNotifications
-        })
+        const response = await axios.get(`${__BASE_URL__}notifications.json`);
+        const data = response.data.notifications.map((n) =>
+          n.html ? { ...n, html: { __html: getLatestNotification() } } : n
+        );
+        dispatch({ type: APP_ACTIONS.SET_NOTIFICATIONS, payload: data });
       } catch (error) {
-        console.error('Error fetching notifications:', error)
+        if (process.env.NODE_ENV !== 'production') {
+          console.error(error);
+        }
       }
-    }
-
-    fetchNotifications()
-  }, [])
+    };
+    fetchNotifications();
+  }, []);
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(ENDPOINTS.courses)
-        dispatch({
-          type: APP_ACTIONS.SET_COURSES,
-          courses: response.data.courses || []
-        })
+        const response = await axios.get(`${__BASE_URL__}courses.json`);
+        dispatch({ type: APP_ACTIONS.SET_COURSES, payload: response.data.courses });
       } catch (error) {
-        console.error('Error fetching courses:', error)
+        if (process.env.NODE_ENV !== 'production') {
+          console.error(error);
+        }
       }
-    }
-
-    if (!user.isLoggedIn) {
-      dispatch({
-        type: APP_ACTIONS.SET_COURSES,
-        courses: []
-      })
-      return
-    }
-
-    fetchCourses()
-  }, [user.isLoggedIn])
-
-  const handleDisplayDrawer = useCallback(() => {
-    dispatch({
-      type: APP_ACTIONS.TOGGLE_DRAWER,
-      displayDrawer: true
-    })
-  }, [])
-
-  const handleHideDrawer = useCallback(() => {
-    dispatch({
-      type: APP_ACTIONS.TOGGLE_DRAWER,
-      displayDrawer: false
-    })
-  }, [])
+    };
+    fetchCourses();
+  }, [user]);
 
   const logIn = useCallback((email, password) => {
-    dispatch({
-      type: APP_ACTIONS.LOGIN,
-      email,
-      password
-    })
-  }, [])
+    dispatch({ type: APP_ACTIONS.LOGIN, payload: { email, password } });
+  }, []);
 
   const logOut = useCallback(() => {
-    dispatch({
-      type: APP_ACTIONS.LOGOUT
-    })
-  }, [])
+    dispatch({ type: APP_ACTIONS.LOGOUT });
+  }, []);
+
+  const handleDisplayDrawer = useCallback(() => {
+    dispatch({ type: APP_ACTIONS.TOGGLE_DRAWER });
+  }, []);
+
+  const handleHideDrawer = useCallback(() => {
+    dispatch({ type: APP_ACTIONS.TOGGLE_DRAWER });
+  }, []);
 
   const markNotificationAsRead = useCallback((id) => {
-    dispatch({
-      type: APP_ACTIONS.MARK_NOTIFICATION_READ,
-      id
-    })
-    console.log(`Notification ${id} has been marked as read`)
-  }, [])
+    console.log(`Notification ${id} has been marked as read`);
+    dispatch({ type: APP_ACTIONS.MARK_NOTIFICATION_READ, payload: id });
+  }, []);
 
   return (
-    <div className={css(styles.app)}>
+    <>
       <Notifications
-        notifications={notifications}
-        handleHideDrawer={handleHideDrawer}
-        handleDisplayDrawer={handleDisplayDrawer}
         displayDrawer={displayDrawer}
+        notifications={notifications}
+        handleDisplayDrawer={handleDisplayDrawer}
+        handleHideDrawer={handleHideDrawer}
         markNotificationAsRead={markNotificationAsRead}
       />
-
-      <>
+      <div className="App">
         <Header user={user} logOut={logOut} />
 
-        {!user.isLoggedIn ? (
-          <BodySectionWithMarginBottom title="Log in to continue">
-            <Login
-              logIn={logIn}
-              email={user.email}
-              password={user.password}
-            />
-          </BodySectionWithMarginBottom>
-        ) : (
-          <BodySectionWithMarginBottom title="Course list">
-            <CourseList courses={courses} />
-          </BodySectionWithMarginBottom>
-        )}
+        <main className="App-body">
+          {!user.isLoggedIn ? (
+            <BodySectionWithMarginBottom title="Log in to continue">
+              <Login logIn={logIn} />
+            </BodySectionWithMarginBottom>
+          ) : (
+            <BodySectionWithMarginBottom title="Course list">
+              <CourseList courses={courses} />
+            </BodySectionWithMarginBottom>
+          )}
 
-        <BodySection title="News from the School">
-          <p>Holberton School news goes here</p>
-        </BodySection>
-      </>
+          <BodySection title="News from the School">
+            <p>ipsum Lorem ipsum dolor sit amet consectetur, adipisicing elit. Similique, asperiores architecto blanditiis fuga doloribus sit illum aliquid ea distinctio minus accusantium, impedit quo voluptatibus ut magni dicta. Recusandae, quia dicta?</p>
+          </BodySection>
+        </main>
 
-      <Footer user={user} />
-    </div>
-  )
+        <Footer user={user} />
+      </div>
+    </>
+  );
 }
+
+export default App;
