@@ -1,5 +1,6 @@
 import { useEffect, useReducer, useCallback } from 'react'
 import axios from 'axios'
+import { StyleSheet, css } from 'aphrodite'
 import Notifications from '../Notifications/Notifications'
 import Footer from '../Footer/Footer'
 import Header from '../Header/Header'
@@ -8,46 +9,42 @@ import CourseList from '../CourseList/CourseList'
 import { getLatestNotification } from '../utils/utils'
 import BodySectionWithMarginBottom from '../BodySection/BodySectionWithMarginBottom'
 import BodySection from '../BodySection/BodySection'
-import appReducer, { APP_ACTIONS, initialState } from './appReducer'
+import { appReducer, initialState, APP_ACTIONS } from './appReducer'
 
 const API_BASE_URL = 'http://localhost:5173'
 const ENDPOINTS = {
   courses: `${API_BASE_URL}/courses.json`,
-  notifications: `${API_BASE_URL}/notifications.json`,
+  notifications: `${API_BASE_URL}/notifications.json`
 }
+
+const styles = StyleSheet.create({
+  app: {
+    position: 'relative'
+  }
+})
 
 export default function App() {
   const [state, dispatch] = useReducer(appReducer, initialState)
-
   const { displayDrawer, user, notifications, courses } = state
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
         const response = await axios.get(ENDPOINTS.notifications)
-
-        const latestNotif = {
-          id: 3,
-          type: 'urgent',
-          html: { __html: getLatestNotification() },
-        }
-
         const currentNotifications = response.data.notifications || []
-        const indexToReplace = currentNotifications.findIndex(
-          (notification) => notification.id === 3
+
+        const updatedNotifications = currentNotifications.map((notification) =>
+          notification.id === 3
+            ? {
+                ...notification,
+                html: { __html: getLatestNotification() }
+              }
+            : notification
         )
-
-        const updatedNotifications = [...currentNotifications]
-
-        if (indexToReplace !== -1) {
-          updatedNotifications[indexToReplace] = latestNotif
-        } else {
-          updatedNotifications.push(latestNotif)
-        }
 
         dispatch({
           type: APP_ACTIONS.SET_NOTIFICATIONS,
-          payload: updatedNotifications,
+          notifications: updatedNotifications
         })
       } catch (error) {
         console.error('Error fetching notifications:', error)
@@ -63,7 +60,7 @@ export default function App() {
         const response = await axios.get(ENDPOINTS.courses)
         dispatch({
           type: APP_ACTIONS.SET_COURSES,
-          payload: response.data.courses || [],
+          courses: response.data.courses || []
         })
       } catch (error) {
         console.error('Error fetching courses:', error)
@@ -73,7 +70,7 @@ export default function App() {
     if (!user.isLoggedIn) {
       dispatch({
         type: APP_ACTIONS.SET_COURSES,
-        payload: [],
+        courses: []
       })
       return
     }
@@ -84,40 +81,41 @@ export default function App() {
   const handleDisplayDrawer = useCallback(() => {
     dispatch({
       type: APP_ACTIONS.TOGGLE_DRAWER,
-      payload: true,
+      displayDrawer: true
     })
   }, [])
 
   const handleHideDrawer = useCallback(() => {
     dispatch({
       type: APP_ACTIONS.TOGGLE_DRAWER,
-      payload: false,
+      displayDrawer: false
     })
   }, [])
 
   const logIn = useCallback((email, password) => {
     dispatch({
       type: APP_ACTIONS.LOGIN,
-      payload: { email, password },
+      email,
+      password
     })
   }, [])
 
   const logOut = useCallback(() => {
     dispatch({
-      type: APP_ACTIONS.LOGOUT,
+      type: APP_ACTIONS.LOGOUT
     })
   }, [])
 
   const markNotificationAsRead = useCallback((id) => {
     dispatch({
-      type: APP_ACTIONS.MARK_NOTIFICATION_AS_READ,
-      payload: id,
+      type: APP_ACTIONS.MARK_NOTIFICATION_READ,
+      id
     })
     console.log(`Notification ${id} has been marked as read`)
   }, [])
 
   return (
-    <div className="relative px-3 min-h-screen flex flex-col">
+    <div className={css(styles.app)}>
       <Notifications
         notifications={notifications}
         handleHideDrawer={handleHideDrawer}
@@ -126,7 +124,7 @@ export default function App() {
         markNotificationAsRead={markNotificationAsRead}
       />
 
-      <div className="flex-1">
+      <>
         <Header user={user} logOut={logOut} />
 
         {!user.isLoggedIn ? (
@@ -146,7 +144,7 @@ export default function App() {
         <BodySection title="News from the School">
           <p>Holberton School news goes here</p>
         </BodySection>
-      </div>
+      </>
 
       <Footer user={user} />
     </div>
