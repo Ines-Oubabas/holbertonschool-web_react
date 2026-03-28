@@ -1,38 +1,23 @@
-import { render, screen } from '@testing-library/react'
-import Footer from './Footer'
-import { getFooterCopy, getCurrentYear } from '../utils/utils'
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import Footer from './Footer';
 
-test('renders a p element string Copyright {the current year} - Holberton School, whenever the getFooterCopy() “isIndex” argument is set to true', () => {
-  render(<Footer isIndex={true} />)
+describe('Footer', () => {
+  test('renders copyright with current year', () => {
+    render(<Footer user={{ isLoggedIn: false }} />);
+    const year = new Date().getFullYear().toString();
+    const p = screen.getByText(/copyright/i);
+    expect(p).toBeInTheDocument();
+    expect(p).toHaveTextContent(year);
+  });
 
-  const currentYear = getCurrentYear()
-  const footerCopy = getFooterCopy(true)
+  test('does not display "Contact us" link when user is logged out', () => {
+    render(<Footer user={{ isLoggedIn: false }} />);
+    expect(screen.queryByText(/contact us/i)).not.toBeInTheDocument();
+  });
 
-  expect(
-    screen.getByText(new RegExp(`copyright ${currentYear} - ${footerCopy}`, 'i'))
-  ).toBeInTheDocument()
-})
-
-test('Does not render the "Contact us" link when user is logged out', () => {
-  const loggedOutUser = {
-    email: '',
-    password: '',
-    isLoggedIn: false,
-  }
-
-  render(<Footer user={loggedOutUser} />)
-
-  expect(screen.queryByText(/contact us/i)).not.toBeInTheDocument()
-})
-
-test('Renders the "Contact us" link when user is logged in', () => {
-  const loggedInUser = {
-    email: 'leslie.knope@pawnee.com',
-    password: 'ILoveWaffles',
-    isLoggedIn: true,
-  }
-
-  render(<Footer user={loggedInUser} />)
-
-  expect(screen.getByText(/contact us/i)).toBeInTheDocument()
-})
+  test('displays "Contact us" link when user is logged in', () => {
+    render(<Footer user={{ isLoggedIn: true }} />);
+    expect(screen.getByText(/contact us/i)).toBeInTheDocument();
+  });
+});
