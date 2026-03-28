@@ -6,25 +6,12 @@ function useLogin(onLogin) {
   const [enableSubmit, setEnableSubmit] = useState(false)
 
   const isValidEmail = (value) => {
-    if (!value || typeof value !== 'string') {
-      return false
-    }
-
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/
     return emailRegex.test(value)
   }
 
-  const isValidPassword = (value) => {
-    return value.length >= 8
-  }
-
   const validateForm = (currentEmail, currentPassword) => {
-    return (
-      currentEmail !== '' &&
-      currentPassword !== '' &&
-      isValidEmail(currentEmail) &&
-      isValidPassword(currentPassword)
-    )
+    return isValidEmail(currentEmail) && currentPassword.length >= 8
   }
 
   const handleChangeEmail = (event) => {
@@ -50,7 +37,7 @@ function useLogin(onLogin) {
     enableSubmit,
     handleChangeEmail,
     handleChangePassword,
-    handleLoginSubmit
+    handleLoginSubmit,
   }
 }
 
