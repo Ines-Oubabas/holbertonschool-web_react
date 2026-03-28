@@ -1,45 +1,23 @@
-import holbertonLogo from '../assets/holberton-logo.jpg'
+import holbertonLogo from '../assets/holberton-logo.jpg';
 
-function Header({ user, logOut }) {
+export default function Header({ user, logOut }) {
   return (
     <>
-      <div className="App-header flex items-center py-2 max-[520px]:flex-col">
+      <header className="App-header flex items-center p-[10px]">
         <img
-          className="App-logo h-60 pointer-events-none max-[520px]:h-60"
+          className="App-logo h-[200px] mr-5"
           src={holbertonLogo}
-          alt="holberton logo"
+          alt="Holberton logo"
         />
-        <h1 className="font-bold text-[color:var(--main-color)] text-5xl max-[520px]:text-5xl max-[520px]:mt-2 max-[435px]:text-4xl">
-          School dashboard
+        <h1 className="text-[var(--main-color)] text-4xl font-bold">
+          School Dashboard
         </h1>
-      </div>
-
+      </header>
       {user.isLoggedIn && (
-        <div id="logoutSection" className="mt-2 text-right pr-4">
-          Welcome {user.email} (
-          <a
-            href="#"
-            onClick={(event) => {
-              event.preventDefault()
-              logOut()
-            }}
-          >
-            logout
-          </a>
-          )
-        </div>
+        <section id="logoutSection">
+          Welcome {user.email} (<a href="#" onClick={logOut}>logout</a>)
+        </section>
       )}
     </>
-  )
+  );
 }
-
-Header.defaultProps = {
-  user: {
-    email: '',
-    password: '',
-    isLoggedIn: false,
-  },
-  logOut: () => null,
-}
-
-export default Header
