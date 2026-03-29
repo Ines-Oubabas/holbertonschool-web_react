@@ -32,10 +32,11 @@ describe('notificationsSlice', () => {
 
     axios.get.mockResolvedValue({ data: mockNotifications });
 
-    const action = await fetchNotifications();
+    const result = await fetchNotifications()(jest.fn(), jest.fn(), undefined);
+
     const state = reducer(initialState, {
       type: fetchNotifications.fulfilled.type,
-      payload: action.payload,
+      payload: result.payload,
     });
 
     expect(state.notifications).toHaveLength(3);
