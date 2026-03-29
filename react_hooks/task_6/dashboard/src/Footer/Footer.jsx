@@ -1,6 +1,9 @@
 import { getCurrentYear, getFooterCopy } from '../utils/utils'
 
-function Footer({ isIndex = false, user }) {
+function Footer({
+  isIndex = false,
+  user = { email: '', password: '', isLoggedIn: false }
+}) {
   const currentYear = getCurrentYear()
   const footerCopy = getFooterCopy(isIndex)
 
@@ -10,7 +13,7 @@ function Footer({ isIndex = false, user }) {
         Copyright {currentYear} - {footerCopy}
       </p>
 
-      {user?.isLoggedIn && (
+      {user.isLoggedIn && (
         <p className="ml-4">
           <a href="#">Contact us</a>
         </p>
