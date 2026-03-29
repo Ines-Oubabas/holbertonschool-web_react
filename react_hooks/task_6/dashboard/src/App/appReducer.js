@@ -1,3 +1,5 @@
+import { getLatestNotification } from '../utils/utils'
+
 export const APP_ACTIONS = {
   LOGIN: 'LOGIN',
   LOGOUT: 'LOGOUT',
@@ -18,20 +20,14 @@ export const initialState = {
   courses: []
 }
 
-function getPayload(action) {
-  return action?.payload ?? action
-}
-
-export default function appReducer(state = initialState, action = {}) {
-  const payload = getPayload(action)
-
+export default function appReducer(state = initialState, action) {
   switch (action.type) {
     case APP_ACTIONS.LOGIN:
       return {
         ...state,
         user: {
-          email: payload.email ?? '',
-          password: payload.password ?? '',
+          email: action.email,
+          password: action.password,
           isLoggedIn: true
         }
       }
@@ -43,49 +39,59 @@ export default function appReducer(state = initialState, action = {}) {
           email: '',
           password: '',
           isLoggedIn: false
-        },
-        courses: []
+        }
       }
 
     case APP_ACTIONS.TOGGLE_DRAWER:
       return {
         ...state,
         displayDrawer:
-          typeof payload.displayDrawer === 'boolean'
-            ? payload.displayDrawer
-            : typeof payload.value === 'boolean'
-              ? payload.value
+          typeof action.displayDrawer === 'boolean'
+            ? action.displayDrawer
+            : typeof action.isVisible === 'boolean'
+              ? action.isVisible
               : !state.displayDrawer
       }
 
+    case APP_ACTIONS.SET_NOTIFICATIONS: {
+      const notificationsArray = Array.isArray(action.notifications)
+        ? action.notifications
+        : []
+
+      const updatedNotifications = notificationsArray.map((notification) => {
+        if (notification.id === 3) {
+          return {
+            ...notification,
+            html: { __html: getLatestNotification() }
+          }
+        }
+        return { ...notification }
+      })
+
+      return {
+        ...state,
+        notifications: updatedNotifications
+      }
+    }
+
     case APP_ACTIONS.MARK_NOTIFICATION_READ: {
-      const id = payload.id
+      const targetId =
+        action.id ?? action.notificationId ?? action.index
+
       return {
         ...state,
         notifications: state.notifications.filter(
-          (notification) => notification.id !== id
+          (notification) => notification.id !== targetId
         )
       }
     }
 
-    case APP_ACTIONS.SET_NOTIFICATIONS:
-      return {
-        ...state,
-        notifications: Array.isArray(payload.notifications)
-          ? [...payload.notifications]
-          : Array.isArray(payload)
-            ? [...payload]
-            : []
-      }
-
     case APP_ACTIONS.SET_COURSES:
       return {
         ...state,
-        courses: Array.isArray(payload.courses)
-          ? [...payload.courses]
-          : Array.isArray(payload)
-            ? [...payload]
-            : []
+        courses: Array.isArray(action.courses)
+          ? action.courses.map((course) => ({ ...course }))
+          : []
       }
 
     default:
