@@ -20,16 +20,18 @@ export const initialState = {
   courses: []
 }
 
-export default function appReducer(state = initialState, action) {
+const appReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case APP_ACTIONS.LOGIN:
       return {
         ...state,
-        user: {
-          email: action.email,
-          password: action.password,
-          isLoggedIn: true
-        }
+        user: action.user
+          ? { ...action.user, isLoggedIn: true }
+          : {
+              email: action.email || '',
+              password: action.password || '',
+              isLoggedIn: true
+            }
       }
 
     case APP_ACTIONS.LOGOUT:
@@ -48,43 +50,35 @@ export default function appReducer(state = initialState, action) {
         displayDrawer:
           typeof action.displayDrawer === 'boolean'
             ? action.displayDrawer
-            : typeof action.isVisible === 'boolean'
-              ? action.isVisible
-              : !state.displayDrawer
+            : !state.displayDrawer
       }
 
     case APP_ACTIONS.SET_NOTIFICATIONS: {
-      const notificationsArray = Array.isArray(action.notifications)
-        ? action.notifications
+      const notifications = Array.isArray(action.notifications)
+        ? action.notifications.map((notification) => {
+            if (notification.id === 3) {
+              return {
+                ...notification,
+                html: { __html: getLatestNotification() }
+              }
+            }
+            return { ...notification }
+          })
         : []
-
-      const updatedNotifications = notificationsArray.map((notification) => {
-        if (notification.id === 3) {
-          return {
-            ...notification,
-            html: { __html: getLatestNotification() }
-          }
-        }
-        return { ...notification }
-      })
 
       return {
         ...state,
-        notifications: updatedNotifications
+        notifications
       }
     }
 
-    case APP_ACTIONS.MARK_NOTIFICATION_READ: {
-      const targetId =
-        action.id ?? action.notificationId ?? action.index
-
+    case APP_ACTIONS.MARK_NOTIFICATION_READ:
       return {
         ...state,
         notifications: state.notifications.filter(
-          (notification) => notification.id !== targetId
+          (notification) => notification.id !== action.id
         )
       }
-    }
 
     case APP_ACTIONS.SET_COURSES:
       return {
@@ -98,3 +92,5 @@ export default function appReducer(state = initialState, action) {
       return state
   }
 }
+
+export default appReducer
