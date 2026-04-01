@@ -18,17 +18,11 @@ export const fetchNotifications = createAsyncThunk(
   async () => {
     const response = await axios.get(ENDPOINTS.notifications);
 
-    const updatedNotifications = response.data.map((notification, index) => {
-      if (index === 2) {
-        return {
-          ...notification,
-          value: getLatestNotification(),
-        };
-      }
-      return notification;
-    });
-
-    return updatedNotifications;
+    return response.data.map((notification) =>
+      notification.id === 3
+        ? { ...notification, value: getLatestNotification() }
+        : notification
+    );
   }
 );
 
