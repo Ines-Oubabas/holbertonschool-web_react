@@ -1,4 +1,4 @@
-import notificationsReducer, { markNotificationAsRead, showDrawer, hideDrawer, fetchNotifications } from "../../features/notifications/notificationsSlice"
+import notificationsReducer, { markNotificationAsRead, fetchNotifications } from "../../features/notifications/notificationsSlice"
 import mockAxios from 'jest-mock-axios';
 
 afterEach(() => {
@@ -15,7 +15,6 @@ const mockNotificationsResponse = {
 
 const initialState = {
   notifications: [],
-  displayDrawer: true
 }
 
 const markedAsReadNotificationsResponse = {
@@ -28,7 +27,6 @@ const markedAsReadNotificationsResponse = {
 test("Returns the correct initial state by default", () => {
   const state = notificationsReducer(undefined, { type: 'unknown' });
   expect(state.notifications).toStrictEqual([]);
-  expect(state.displayDrawer).toBe(true);
 })
 
 test("fetches notifications data correctly", async () => {
@@ -73,8 +71,7 @@ test('Handle fetchNotifications.pending correctly', () => {
   const state = notificationsReducer(initialState, action);
 
   expect(state).toEqual({
-    notifications: [],
-    displayDrawer: true
+    notifications: []
   });
 })
 
@@ -126,35 +123,10 @@ test('should verify payload contains expected notification structure', async () 
 
 test("Removes a notification correctly when the markNotificationAsRead action is dispatched", () => {
   const previousState = {
-    notifications: mockNotificationsResponse.notifications,
-    displayDrawer: true
+    notifications: mockNotificationsResponse.notifications
   }
   const action = markNotificationAsRead(1);
   const newState = notificationsReducer(previousState, action);
 
   expect(newState.notifications).toStrictEqual(markedAsReadNotificationsResponse.notifications);
-})
-
-test("Toggles the displayDrawer state correctly when the hideDrawer action is dispatched", () => {
-  const previousState = {
-    notifications: [],
-    displayDrawer: false
-  };
-
-  const action = showDrawer();
-  const hiddenState = notificationsReducer(previousState, action);
-
-  expect(hiddenState.displayDrawer).toBe(true);
-})
-
-test("Toggles the displayDrawer state correctly when the hideDrawer action is dispatched", () => {
-  const previousState = {
-    notifications: [],
-    displayDrawer: true
-  };
-
-  const action = hideDrawer();
-  const hiddenState = notificationsReducer(previousState, action);
-
-  expect(hiddenState.displayDrawer).toBe(false);
 })
