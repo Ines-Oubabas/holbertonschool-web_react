@@ -1,8 +1,10 @@
-import { memo } from "react";
+import { memo, useRef } from "react";
 import { StyleSheet, css } from "aphrodite";
 import closeIcon from "../../assets/close-icon.png";
 import NotificationItem from "../NotificationItem/NotificationItem";
-import { markNotificationAsRead, showDrawer, hideDrawer } from '../../features/notifications/notificationsSlice'
+import {
+  markNotificationAsRead,
+} from '../../features/notifications/notificationsSlice'
 import { useDispatch, useSelector } from "react-redux";
 
 const opacityKeyframes = {
@@ -35,6 +37,8 @@ const styles = StyleSheet.create({
     width: "25%",
     float: "right",
     marginTop: "20px",
+    opacity: 0,
+    visibility: "hidden",
     "@media (max-width: 900px)": {
       position: "fixed",
       top: 0,
@@ -48,6 +52,10 @@ const styles = StyleSheet.create({
       backgroundColor: "white",
       zIndex: 1000,
     },
+  },
+  visible: {
+    opacity: 1,
+    visibility: "visible",
   },
   ul: {
     "@media (max-width: 900px)": {
@@ -88,14 +96,22 @@ const styles = StyleSheet.create({
 });
 
 const Notifications = memo(function Notifications() {
-  const { notifications, displayDrawer } = useSelector(state => state.notifications);
+  const {
+    notifications,
+  } = useSelector(state => state.notifications);
   const dispatch = useDispatch();
 
-  const handleDisplayDrawer = () => {
-    dispatch(showDrawer());
-  }
-  const handleHideDrawer = () => {
-    dispatch(hideDrawer());
+  const DrawerRef = useRef(null);
+  const isVisible = useRef(false);
+
+  const handleToggleDrawer = () => {
+    isVisible.current = !isVisible.current;
+
+    if (isVisible.current) {
+      DrawerRef.current.className = css(styles.notificationItems, styles.visible);
+    } else {
+      DrawerRef.current.className = css(styles.notificationItems);
+    }
   }
   const handleMarkNotificationAsRead = (id) => {
     dispatch(markNotificationAsRead(id));
@@ -104,17 +120,19 @@ const Notifications = memo(function Notifications() {
     <>
       <div
         className={css(styles.menuItem)}
-        onClick={() => handleDisplayDrawer()}
+        onClick={() => handleToggleDrawer()}
       >
         Your notifications
       </div>
-      {displayDrawer ? (
-        <div className={css(styles.notificationItems)}>
+      {
+        <div
+          ref={DrawerRef}
+          className={css(styles.notificationItems)}>
           {notifications.length > 0 ? (
             <>
               <p className={css(styles.p)}>Here is the list of notifications</p>
               <button
-                onClick={() => handleHideDrawer()}
+                onClick={() => handleToggleDrawer()}
                 aria-label="Close"
                 className={css(styles.button)}
               >
@@ -137,9 +155,7 @@ const Notifications = memo(function Notifications() {
             <p className={css(styles.p)}>No new notifications for now</p>
           )}
         </div>
-      ) : (
-        []
-      )}
+      }
     </>
   );
 });
