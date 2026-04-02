@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import Notifications from './components/Notifications/Notifications';
 import Footer from './components/Footer/Footer';
@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchCourses } from './features/courses/coursesSlice';
 import { fetchNotifications } from './features/notifications/notificationsSlice';
 
+
 const styles = StyleSheet.create({
   app: {
     position: 'relative'
@@ -18,44 +19,38 @@ const styles = StyleSheet.create({
 });
 
 export default function App() {
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
   const dispatch = useDispatch();
-  const coursesFetchedRef = useRef(false);
 
   useEffect(() => {
     dispatch(fetchNotifications());
   }, [dispatch]);
 
   useEffect(() => {
-    if (isLoggedIn && !coursesFetchedRef.current) {
-      coursesFetchedRef.current = true;
+    if (isLoggedIn) {
       dispatch(fetchCourses());
     }
-
-    if (!isLoggedIn) {
-      coursesFetchedRef.current = false;
-    }
   }, [dispatch, isLoggedIn]);
-
   return (
     <div className={css(styles.app)}>
-      <Notifications />
+      <Notifications/>
       <>
-        <Header />
+        <Header/>
         {!isLoggedIn ? (
-          <BodySectionWithMarginBottom title="Log in to continue">
-            <Login />
+          <BodySectionWithMarginBottom title='Log in to continue'>
+            <Login/>
           </BodySectionWithMarginBottom>
         ) : (
-          <BodySectionWithMarginBottom title="Course list">
-            <CourseList />
+          <BodySectionWithMarginBottom title='Course list'>
+            <CourseList/>
           </BodySectionWithMarginBottom>
         )}
         <BodySection title="News from the School">
           <p>Holberton School news goes here</p>
         </BodySection>
       </>
-      <Footer />
+      <Footer/>
     </div>
   );
 }
