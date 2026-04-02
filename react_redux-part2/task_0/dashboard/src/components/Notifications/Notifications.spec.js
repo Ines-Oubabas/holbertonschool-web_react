@@ -15,7 +15,7 @@ const createTestStore = (preloadedState) => {
 };
 
 // Default initial states for auth (not logged in)
-const displayDrawerState = {
+const initialState = {
   auth: {
     isLoggedIn: false,
     user: {
@@ -29,28 +29,6 @@ const displayDrawerState = {
       { id: 2, type: 'urgent', value: 'New resume available' },
       { id: 3, type: 'urgent', html: { __html: '<strong>Urgent requirement</strong> - complete by EOD' } }
     ],
-    displayDrawer: true
-  },
-  courses: {
-    courses: []
-  }
-};
-
-const hideDrawerState = {
-  auth: {
-    isLoggedIn: false,
-    user: {
-      email: "",
-      password: "",
-    }
-  },
-  notifications: {
-    notifications: [
-      { id: 1, type: 'default', value: 'New course available' },
-      { id: 2, type: 'urgent', value: 'New resume available' },
-      { id: 3, type: 'urgent', html: { __html: '<strong>Urgent requirement</strong> - complete by EOD' } }
-    ],
-    displayDrawer: false
   },
   courses: {
     courses: []
@@ -68,8 +46,8 @@ describe("Notifications component", () => {
     );
   });
 
-  test('Verify that displayDrawer is set to false when closing the drawer', () => {
-    const store = createTestStore(displayDrawerState);
+  test('Verify that drawer visibility is set to hidden by default', () => {
+    const store = createTestStore(initialState);
 
     render(
       <Provider store={store}>
@@ -77,19 +55,16 @@ describe("Notifications component", () => {
       </Provider>
     );
 
-    const closeButton = screen.getByRole("button", { name: /close/i });
-    const titleElement = screen.getByText(/Here is the list of notifications/i);
-
-    expect(titleElement).toBeInTheDocument();      
-    expect(store.getState().notifications.displayDrawer).toBe(true)
+    const drawer = screen.getByText(/Here is the list of notifications/i);
+    const className = drawer.parentElement.className;
     
-    fireEvent.click(closeButton);
-
-    expect(store.getState().notifications.displayDrawer).toBe(false)
+    // Should only have base class (notificationItems), not visible class
+    expect(className).toBeTruthy();
+    expect(className.split(' ').length).toBe(1);
   });
 
-  test('Verify that displayDrawer is set to true when opening the drawer', () => {
-    const store = createTestStore(hideDrawerState);
+  test('Verify that drawer visibility is set to visible when opening the drawer', () => {
+    const store = createTestStore(initialState);
 
     render(
       <Provider store={store}>
@@ -97,39 +72,21 @@ describe("Notifications component", () => {
       </Provider>
       );
 
-    expect(store.getState().notifications.displayDrawer).toBe(false)
+    const drawer = screen.getByText(/Here is the list of notifications/i);
+    const initialClassName = drawer.parentElement.className;
 
     const notificationTitle = screen.getByText('Your notifications');
     fireEvent.click(notificationTitle);
 
-    const titleElement = screen.getByText(/Here is the list of notifications/i);
-
-    expect(titleElement).toBeInTheDocument();
-    expect(store.getState().notifications.displayDrawer).toBe(true)
+    const newClassName = drawer.parentElement.className;
+    
+    // After clicking, className should be different (visible class added)
+    expect(newClassName).not.toBe(initialClassName);
+    expect(newClassName.length).toBeGreaterThan(initialClassName.length);
 });
 
-  test('Verify that displayDrawer is set to true when opening the drawer', () => {
-    const store = createTestStore(hideDrawerState);
-
-    render(
-      <Provider store={store}>
-        <Notifications />
-      </Provider>
-      );
-
-    expect(store.getState().notifications.displayDrawer).toBe(false)
-
-    const notificationTitle = screen.getByText('Your notifications');
-    fireEvent.click(notificationTitle);
-
-    const titleElement = screen.getByText(/Here is the list of notifications/i);
-
-    expect(titleElement).toBeInTheDocument();
-    expect(store.getState().notifications.displayDrawer).toBe(true)
-  });
-
   test('Verify that a notification marked as read is removed from the list', () => {
-    const store = createTestStore(displayDrawerState);
+    const store = createTestStore(initialState);
 
     render(
       <Provider store={store}>
