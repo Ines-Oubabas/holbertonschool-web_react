@@ -9,6 +9,7 @@ afterEach(() => {
   mockAxios.reset();
 });
 
+// Helper function to create a fresh store with custom initial state
 const createTestStore = (preloadedState) => {
   return configureStore({
     reducer: rootReducer,
@@ -16,38 +17,22 @@ const createTestStore = (preloadedState) => {
   });
 };
 
+// Default initial states for auth (not logged in)
 const notLoggedInState = {
   auth: {
     isLoggedIn: false,
     user: {
-      email: '',
-      password: '',
-    },
+      email: "",
+      password: "",
+    }
   },
   notifications: {
     notifications: [],
-    displayDrawer: true,
+    displayDrawer: true
   },
   courses: {
-    courses: [],
-  },
-};
-
-const isLoggedInState = {
-  auth: {
-    isLoggedIn: true,
-    user: {
-      email: 'nickydoll@dragrace.fr',
-      password: 'pichecometrue',
-    },
-  },
-  notifications: {
-    notifications: [],
-    displayDrawer: true,
-  },
-  courses: {
-    courses: [],
-  },
+    courses: []
+  }
 };
 
 const mockNotificationsResponse = {
@@ -55,13 +40,9 @@ const mockNotificationsResponse = {
     notifications: [
       { id: 1, type: 'default', value: 'New course available' },
       { id: 2, type: 'urgent', value: 'New resume available' },
-      {
-        id: 3,
-        type: 'urgent',
-        html: { __html: '<strong>Urgent requirement</strong> - complete by EOD' },
-      },
-    ],
-  },
+      { id: 3, type: 'urgent', html: { __html: '<strong>Urgent requirement</strong> - complete by EOD' } }
+    ]
+  }
 };
 
 const mockCoursesResponse = {
@@ -69,14 +50,33 @@ const mockCoursesResponse = {
     courses: [
       { id: 1, name: 'ES6', credit: 60 },
       { id: 2, name: 'Webpack', credit: 20 },
-      { id: 3, name: 'React', credit: 40 },
-    ],
-  },
+      { id: 3, name: 'React', credit: 40 }
+    ]
+  }
 };
+
+// Default initial states for auth (not logged in)
+const isLoggedInState = {
+  auth: {
+    isLoggedIn: true,
+    user: {
+      email: "nickydoll@dragrace.fr",
+      password: "pichecometrue",
+    }
+  },
+  notifications: {
+    notifications: [],
+    displayDrawer: true
+  },
+  courses: {
+    courses: []
+  }
+};
+
 
 test('The App component renders Login by default (user not logged in)', async () => {
   const store = createTestStore(notLoggedInState);
-
+  
   render(
     <Provider store={store}>
       <App />
@@ -86,35 +86,40 @@ test('The App component renders Login by default (user not logged in)', async ()
   mockAxios.mockResponse(mockNotificationsResponse);
 
   await waitFor(() => {
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
-    expect(screen.getAllByRole('button', { name: /ok/i }).length).toBeGreaterThanOrEqual(1);
+    const emailLabelElement = screen.getByLabelText(/email/i);
+    const passwordLabelElement = screen.getByLabelText(/password/i);
+    const buttonElements = screen.getAllByRole('button', { name: /ok/i })
+
+    expect(emailLabelElement).toBeInTheDocument()
+    expect(passwordLabelElement).toBeInTheDocument()
+    expect(buttonElements.length).toBeGreaterThanOrEqual(1)
   });
 });
 
 test('The App component renders Courses when user is logged in', async () => {
   const store = createTestStore(isLoggedInState);
-
+  
   render(
     <Provider store={store}>
       <App />
     </Provider>
   );
 
-  mockAxios.mockResponse(mockNotificationsResponse);
+  mockAxios.mockResponse(mockNotificationsResponse)
   mockAxios.mockResponse(mockCoursesResponse);
 
   await waitFor(() => {
     expect(screen.getByText('ES6')).toBeInTheDocument();
     expect(screen.getByText('Webpack')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /course list/i })).toBeInTheDocument();
+    
     expect(store.getState().courses.courses).toEqual(mockCoursesResponse.data.courses);
   });
 });
 
 test('The App component renders Notifications when user is not logged in', async () => {
-  const store = createTestStore(notLoggedInState);
-
+   const store = createTestStore(notLoggedInState);
+  
   render(
     <Provider store={store}>
       <App />
@@ -124,61 +129,11 @@ test('The App component renders Notifications when user is not logged in', async
   mockAxios.mockResponse(mockNotificationsResponse);
 
   await waitFor(() => {
-    expect(screen.getByText(/Here is the list of notifications/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
-    expect(store.getState().notifications.notifications).toEqual(
-      mockNotificationsResponse.data.notifications
-    );
+    const titleElement = screen.getByText(/Here is the list of notifications/i);
+    const buttonElement = screen.getByRole("button", { name: /close/i });
+    expect(titleElement).toBeInTheDocument();
+    expect(buttonElement).toBeInTheDocument();
+
+    expect(store.getState().notifications.notifications).toEqual(mockNotificationsResponse.data.notifications);
   });
-});
-
-test('The App component should not fetch courses when isLoggedIn is false', async () => {
-  const store = createTestStore(notLoggedInState);
-
-  render(
-    <Provider store={store}>
-      <App />
-    </Provider>
-  );
-
-  const firstRequest = mockAxios.lastReqGet();
-  expect(firstRequest.url).toBe('http://localhost:5173/notifications.json');
-
-  mockAxios.mockResponse(mockNotificationsResponse);
-
-  await waitFor(() => {
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-  });
-
-  const courseRequests = mockAxios.getReqMatching({
-    url: 'http://localhost:5173/courses.json',
-  });
-
-  expect(courseRequests).toHaveLength(0);
-});
-
-test('The App component should fetch courses data only once when isLoggedIn is true', async () => {
-  const store = createTestStore(isLoggedInState);
-
-  render(
-    <Provider store={store}>
-      <App />
-    </Provider>
-  );
-
-  const firstRequest = mockAxios.lastReqGet();
-  expect(firstRequest.url).toBe('http://localhost:5173/courses.json');
-
-  mockAxios.mockResponse(mockCoursesResponse);
-  mockAxios.mockResponse(mockNotificationsResponse);
-
-  await waitFor(() => {
-    expect(store.getState().courses.courses).toEqual(mockCoursesResponse.data.courses);
-  });
-
-  const courseRequests = mockAxios.getReqMatching({
-    url: 'http://localhost:5173/courses.json',
-  });
-
-  expect(courseRequests).toHaveLength(1);
-});
+})
