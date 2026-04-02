@@ -4,7 +4,6 @@ import axios from 'axios';
 
 const initialState = {
   notifications: [],
-  displayDrawer: true
 }
 
 const API_BASE_URL = "http://localhost:5173";
@@ -46,12 +45,6 @@ const notificationsSlice = createSlice({
       );
       console.log(`Notification ${action.payload} has been marked as read`);
     },
-    showDrawer: (state) => {
-      state.displayDrawer = true;
-    },
-    hideDrawer: (state) => {
-      state.displayDrawer = false;
-    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchNotifications.fulfilled, (state, action) => {
@@ -60,6 +53,6 @@ const notificationsSlice = createSlice({
   }
 });
 
-export const { markNotificationAsRead, showDrawer, hideDrawer } = notificationsSlice.actions;
+export const { markNotificationAsRead } = notificationsSlice.actions;
 export { fetchNotifications };
 export default notificationsSlice.reducer;
