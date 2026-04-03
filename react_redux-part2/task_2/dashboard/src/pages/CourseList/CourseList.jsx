@@ -1,7 +1,8 @@
 import { StyleSheet, css } from 'aphrodite';
 import CourseListRow from './CourseListRow/CourseListRow';
 import WithLogging from '../../components/HOC/WithLogging';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectCourse, unSelectCourse } from '../../features/courses/coursesSlice';
 
 const styles = StyleSheet.create({
   courses: {
@@ -25,48 +26,61 @@ const styles = StyleSheet.create({
   }
 });
 
+
+
 function CourseList() {
   const { courses } = useSelector(state => state.courses);
+  const dispatch = useDispatch();
 
+  const onChangeRow = (id, checked) => {
+    if (checked) {
+      dispatch(selectCourse(id));
+    } else {
+      dispatch(unSelectCourse(id))
+    }
+  }
   return (
     <div className={css(styles.courses)}>
       {
-        courses.length > 0 ? 
-        (
-          <table id='CourseList' className={css(styles.table)}>
-            <thead>
-              <CourseListRow 
-                textFirstCell="Available courses" 
-                isHeader={true} 
-              />
-              <CourseListRow 
-                textFirstCell="Course name" 
-                textSecondCell="Credit" 
-                isHeader={true} 
-              />
-            </thead>
-            <tbody>
-              {
-                courses.map(course => (
-                  <CourseListRow 
-                    key={course.id} 
-                    textFirstCell={course.name} 
-                    textSecondCell={course.credit} 
-                  />
-                ))
-              }
-            </tbody>
-          </table>
-        ) : (
-          <table id='CourseList' className={css(styles.table)}>
-            <thead>
-              <CourseListRow 
-                isHeader={true} 
-                textFirstCell="No course available yet" 
-              />
-            </thead>
-          </table>
-        )
+        courses.length > 0 ?
+          (
+            <table id='CourseList' className={css(styles.table)} >
+              <thead>
+                <CourseListRow
+                  textFirstCell="Available courses"
+                  isHeader={true}
+                />
+                <CourseListRow
+                  textFirstCell="Course name"
+                  textSecondCell="Credit"
+                  isHeader={true}
+                />
+              </thead>
+              <tbody>
+                {
+                  courses.map(course => (
+                    <CourseListRow
+                      key={course.id}
+                      id={course.id}
+                      textFirstCell={course.name}
+                      textSecondCell={course.credit}
+                      onChangeRow={onChangeRow}
+                      isSelected={course.isSelected || false}
+                    />
+                  ))
+                }
+              </tbody>
+            </table>
+          ) : (
+            <table id='CourseList' className={css(styles.table)}>
+              <thead>
+                <CourseListRow
+                  isHeader={true}
+                  textFirstCell="No course available yet"
+                />
+              </thead>
+            </table>
+          )
       }
     </div>
   );
