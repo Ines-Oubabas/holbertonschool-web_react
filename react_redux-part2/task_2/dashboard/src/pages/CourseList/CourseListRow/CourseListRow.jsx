@@ -1,46 +1,54 @@
-import { StyleSheet, css } from 'aphrodite';
+import PropTypes from 'prop-types';
 
-const styles = StyleSheet.create({
-  headerRow: {
-    backgroundColor: '#deb5b545'
-  },
-  row: {
-    backgroundColor: '#f5f5f5ab'
-  }
-});
+CourseListRow.propTypes = {
+  isHeader: PropTypes.bool.isRequired,
+  textFirstCell: PropTypes.string.isRequired,
+  textSecondCell: PropTypes.string,
+};
 
 export default function CourseListRow({
   isHeader = false,
   textFirstCell = '',
   textSecondCell = null,
-  isSelected = false,
-  onChangeRow = null,
-  changeRow = null,
-  id,
 }) {
-  const rowStyle = isHeader ? styles.headerRow : styles.row;
-  const handleChange = changeRow || onChangeRow || (() => {});
-
-  if (isHeader) {
-    return (
-      <tr className={css(rowStyle)}>
-        <th colSpan={textSecondCell ? 1 : 2}>{textFirstCell}</th>
-        {textSecondCell ? <th>{textSecondCell}</th> : null}
-      </tr>
-    );
-  }
-
-  return (
-    <tr className={css(rowStyle)}>
-      <td>
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={(event) => handleChange(id, event.target.checked)}
-        />
+  const cellStyle = isHeader 
+    ? { backgroundColor: 'white', opacity: 0.66 }
+    : { backgroundColor: 'white', opacity: 0.45 };
+  
+  const cellClasses = 'border border-gray-800';
+  
+  return isHeader ? (
+    <tr>
+      <th 
+        colSpan={textSecondCell ? 1 : 2}
+        className={cellClasses}
+        style={cellStyle}
+      >
+        {textFirstCell}
+      </th>
+      {textSecondCell ? (
+        <th 
+          className={cellClasses}
+          style={cellStyle}
+        >
+          {textSecondCell}
+        </th>
+      ) : null}
+    </tr>
+  ) : (
+    <tr>
+      <td 
+        className={`${cellClasses} pl-2`}
+        style={cellStyle}
+      >
         {textFirstCell}
       </td>
-      <td>{textSecondCell}</td>
+      <td 
+        className={`${cellClasses} pl-2`}
+        style={cellStyle}
+      >
+        {textSecondCell}
+      </td>
     </tr>
   );
 }
