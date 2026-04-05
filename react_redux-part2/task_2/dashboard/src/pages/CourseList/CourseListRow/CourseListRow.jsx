@@ -14,25 +14,27 @@ export default function CourseListRow({
   textFirstCell = '',
   textSecondCell = null,
   isSelected = false,
-  onChangeRow = null,
-  changeRow = null,
+  changeRow = () => {},
   id,
 }) {
   const rowStyle = isHeader ? styles.headerRow : styles.row;
-  const handleChange = onChangeRow || changeRow || (() => {});
 
-  return isHeader ? (
-    <tr className={css(rowStyle)}>
-      <th colSpan={textSecondCell ? 1 : 2}>{textFirstCell}</th>
-      {textSecondCell ? <th>{textSecondCell}</th> : null}
-    </tr>
-  ) : (
+  if (isHeader) {
+    return (
+      <tr className={css(rowStyle)}>
+        <th colSpan={textSecondCell ? 1 : 2}>{textFirstCell}</th>
+        {textSecondCell ? <th>{textSecondCell}</th> : null}
+      </tr>
+    );
+  }
+
+  return (
     <tr className={css(rowStyle)}>
       <td>
         <input
           type="checkbox"
           checked={isSelected}
-          onChange={(event) => handleChange(id, event.target.checked)}
+          onChange={(event) => changeRow(id, event.target.checked)}
         />
         {textFirstCell}
       </td>

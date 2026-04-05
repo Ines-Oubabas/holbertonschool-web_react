@@ -8,7 +8,7 @@ test('it should display 1 "th" element with colspan=2 when isHeader is true and 
         <CourseListRow isHeader={true} textFirstCell="First" textSecondCell={null} />
       </tbody>
     </table>
-  )
+  );
 
   const thElement = screen.getByRole('columnheader');
 
@@ -22,7 +22,7 @@ test('it should display 2 "th" elements when isHeader is true and textSecondCell
         <CourseListRow isHeader={true} textFirstCell="First" textSecondCell="Second" />
       </tbody>
     </table>
-  )
+  );
 
   const thElements = screen.getAllByRole('columnheader');
 
@@ -36,7 +36,7 @@ test('it should render 2 "td" elements inside a "tr" element when isHeader is fa
         <CourseListRow isHeader={false} textFirstCell="Data1" textSecondCell="Data2" />
       </tbody>
     </table>
-  )
+  );
 
   const trElement = screen.getByRole('row');
   const tdElements = within(trElement).getAllByRole('cell');
@@ -52,7 +52,7 @@ test('it should render a checkbox when isHeader is false', () => {
         <CourseListRow isHeader={false} textFirstCell="Data1" textSecondCell="Data2" />
       </tbody>
     </table>
-  )
+  );
 
   const checkbox = screen.getByRole('checkbox');
   expect(checkbox).toBeInTheDocument();
@@ -65,9 +65,9 @@ test('checkbox should be checked when isSelected is true', () => {
         <CourseListRow isHeader={false} isSelected={true} textFirstCell="Data1" textSecondCell="Data2" />
       </tbody>
     </table>
-  )
-  const checkbox = screen.getByRole('checkbox');
+  );
 
+  const checkbox = screen.getByRole('checkbox');
   expect(checkbox).toBeChecked();
 });
 
@@ -78,15 +78,14 @@ test('checkbox should be unchecked when isSelected is false', () => {
         <CourseListRow isHeader={false} isSelected={false} textFirstCell="Data1" textSecondCell="Data2" />
       </tbody>
     </table>
-  )
+  );
+
   const checkbox = screen.getByRole('checkbox');
-
   expect(checkbox).not.toBeChecked();
-
 });
 
-test('onChangeRow is called with correct parameters when checkbox is clicked', () => {
-  const mockOnChangeRow = jest.fn();
+test('changeRow is called with correct parameters when checkbox is clicked', () => {
+  const mockChangeRow = jest.fn();
 
   render(
     <table>
@@ -94,9 +93,9 @@ test('onChangeRow is called with correct parameters when checkbox is clicked', (
         <CourseListRow
           id={1}
           isSelected={false}
-          onChangeRow={mockOnChangeRow}
-          textFirstCell={'data1'}
-          textSecondCell={'data2'}
+          changeRow={mockChangeRow}
+          textFirstCell="data1"
+          textSecondCell="data2"
         />
       </tbody>
     </table>
@@ -105,5 +104,5 @@ test('onChangeRow is called with correct parameters when checkbox is clicked', (
   const checkbox = screen.getByRole('checkbox');
   fireEvent.click(checkbox);
 
-  expect(mockOnChangeRow).toHaveBeenCalledWith(1, true);
+  expect(mockChangeRow).toHaveBeenCalledWith(1, true);
 });

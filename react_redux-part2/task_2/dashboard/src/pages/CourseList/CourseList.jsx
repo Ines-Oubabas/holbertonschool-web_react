@@ -30,7 +30,7 @@ function CourseList() {
   const { courses } = useSelector((state) => state.courses);
   const dispatch = useDispatch();
 
-  const onChangeRow = (id, checked) => {
+  const changeRow = (id, checked) => {
     if (checked) {
       dispatch(selectCourse(id));
     } else {
@@ -60,8 +60,7 @@ function CourseList() {
                 id={course.id}
                 textFirstCell={course.name}
                 textSecondCell={course.credit}
-                onChangeRow={onChangeRow}
-                changeRow={onChangeRow}
+                changeRow={changeRow}
                 isSelected={course.isSelected || false}
               />
             ))}
