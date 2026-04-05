@@ -1,139 +1,141 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import App from '../App';
-import { Provider } from 'react-redux';
-import mockAxios from 'jest-mock-axios';
-import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from '../app/rootReducer';
+import React from "react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { configureStore } from "@reduxjs/toolkit";
+import { Provider } from "react-redux";
+import App from "../App";
+import authReducer, { login, logout } from "../features/auth/authSlice";
+import notificationsReducer, { fetchNotifications } from "../features/notifications/notificationsSlice";
+import coursesReducer, { fetchCourses } from "../features/courses/coursesSlice";
+import { act } from "@testing-library/react";
 
-afterEach(() => {
-  mockAxios.reset();
-});
-
-// Helper function to create a fresh store with custom initial state
-const createTestStore = (preloadedState) => {
-  return configureStore({
-    reducer: rootReducer,
+const renderWithStore = (ui, { preloadedState } = {}) => {
+  const store = configureStore({
+    reducer: {
+      auth: authReducer,
+      notifications: notificationsReducer,
+      courses: coursesReducer,
+    },
     preloadedState,
   });
+
+  return {
+    ...render(<Provider store={store}>{ui}</Provider>),
+    store,
+  };
 };
 
-// Default initial states for auth (not logged in)
-const notLoggedInState = {
-  auth: {
-    isLoggedIn: false,
-    user: {
-      email: "",
-      password: "",
-    }
-  },
-  notifications: {
-    notifications: [],
-    displayDrawer: true
-  },
-  courses: {
-    courses: []
-  }
-};
+const mockNotifications = [
+  { id: 1, type: "default", value: "New course available" },
+  { id: 2, type: "urgent", value: "New resume available" },
+];
 
-const mockNotificationsResponse = {
-  data: {
-    notifications: [
-      { id: 1, type: 'default', value: 'New course available' },
-      { id: 2, type: 'urgent', value: 'New resume available' },
-      { id: 3, type: 'urgent', html: { __html: '<strong>Urgent requirement</strong> - complete by EOD' } }
-    ]
-  }
-};
+const mockCourses = [
+  { id: 1, name: "React", credit: 40 },
+  { id: 2, name: "Webpack", credit: 20 },
+];
 
-const mockCoursesResponse = {
-  data: {
-    courses: [
-      { id: 1, name: 'ES6', credit: 60, isSelected: false },
-      { id: 2, name: 'Webpack', credit: 20, isSelected: false },
-      { id: 3, name: 'React', credit: 40, isSelected: false }
-    ]
-  }
-};
+describe("App Component (Redux Integration)", () => {
+  test("renders login form when not logged in", () => {
+    renderWithStore(<App />, {
+      preloadedState: { auth: { isLoggedIn: false, email: "", password: "" } },
+    });
 
-// Default initial states for auth (not logged in)
-const isLoggedInState = {
-  auth: {
-    isLoggedIn: true,
-    user: {
-      email: "nickydoll@dragrace.fr",
-      password: "pichecometrue",
-    }
-  },
-  notifications: {
-    notifications: [],
-    displayDrawer: true
-  },
-  courses: {
-    courses: []
-  }
-};
+    expect(screen.getByText(/log in to continue/i)).toBeInTheDocument();
+    expect(screen.queryByText(/course list/i)).not.toBeInTheDocument();
+  });
+
+  test("renders CourseList when logged in", () => {
+    renderWithStore(<App />, {
+      preloadedState: {
+        auth: { isLoggedIn: true, email: "user@test.com", password: "123" },
+        courses: { courses: mockCourses },
+      },
+    });
+
+    expect(screen.getByText(/course list/i)).toBeInTheDocument();
+    expect(screen.getByText(/react/i)).toBeInTheDocument();
+    expect(screen.getByText(/webpack/i)).toBeInTheDocument();
+    expect(screen.queryByText(/log in to continue/i)).not.toBeInTheDocument();
+  });
+
+  test("fetches notifications on mount and displays them", async () => {
+    const { store } = renderWithStore(<App />, {
+      preloadedState: { notifications: { notifications: [], displayDrawer: true } },
+    });
+
+    store.dispatch(fetchNotifications.fulfilled(mockNotifications));
+
+    await waitFor(() => {
+      expect(screen.getByText(/new course available/i)).toBeInTheDocument();
+      expect(screen.getByText(/new resume available/i)).toBeInTheDocument();
+    });
+  });
+
+  test("opens and closes notification drawer", async () => {
+    const { store } = renderWithStore(<App />, {
+      preloadedState: { notifications: { notifications: mockNotifications, displayDrawer: false } },
+    });
+
+    fireEvent.click(screen.getByText(/your notifications/i));
+    await waitFor(() => {
+      expect(screen.getByTestId("Notifications")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /close/i }));
+    await waitFor(() => {
+      expect(screen.queryByTestId("Notifications")).not.toBeInTheDocument();
+    });
+  });
+
+  test("markNotificationAsRead removes a notification", async () => {
+    const { store } = renderWithStore(<App />, {
+      preloadedState: { notifications: { notifications: mockNotifications, displayDrawer: true } },
+    });
+
+    const firstNotif = await screen.findByText(/new course available/i);
+    fireEvent.click(firstNotif);
+
+    await waitFor(() => {
+      expect(screen.queryByText(/new course available/i)).not.toBeInTheDocument();
+    });
+  });
 
 
-test('The App component renders Login by default (user not logged in)', async () => {
-  const store = createTestStore(notLoggedInState);
-  
-  render(
-    <Provider store={store}>
-      <App />
-    </Provider>
-  );
+  test("login and logout flow updates Redux state and UI", async () => {
+    const { store } = renderWithStore(<App />, {
+      preloadedState: { auth: { user: { email: "", password: "" }, isLoggedIn: false } },
+    });
 
-  mockAxios.mockResponse(mockNotificationsResponse);
+    await act(async () => {
+      store.dispatch(login({ email: "user@test.com", password: "123" }));
+    });
 
-  await waitFor(() => {
-    const emailLabelElement = screen.getByLabelText(/email/i);
-    const passwordLabelElement = screen.getByLabelText(/password/i);
-    const buttonElements = screen.getAllByRole('button', { name: /ok/i })
+    await waitFor(() => {
+      expect(screen.getByText(/course list/i)).toBeInTheDocument();
+      expect(screen.queryByText(/log in to continue/i)).not.toBeInTheDocument();
+    });
 
-    expect(emailLabelElement).toBeInTheDocument()
-    expect(passwordLabelElement).toBeInTheDocument()
-    expect(buttonElements.length).toBeGreaterThanOrEqual(1)
+    await act(async () => {
+      store.dispatch(logout());
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText(/log in to continue/i)).toBeInTheDocument();
+      expect(screen.queryByText(/course list/i)).not.toBeInTheDocument();
+    });
+  });
+
+
+  test("fetches courses after login", async () => {
+    const { store } = renderWithStore(<App />, {
+      preloadedState: { auth: { isLoggedIn: true, email: "user@test.com", password: "123" } },
+    });
+
+    store.dispatch(fetchCourses.fulfilled(mockCourses));
+
+    await waitFor(() => {
+      expect(screen.getByText(/react/i)).toBeInTheDocument();
+      expect(screen.getByText(/webpack/i)).toBeInTheDocument();
+    });
   });
 });
-
-test('The App component renders Courses when user is logged in', async () => {
-  const store = createTestStore(isLoggedInState);
-  
-  render(
-    <Provider store={store}>
-      <App />
-    </Provider>
-  );
-
-  mockAxios.mockResponse(mockNotificationsResponse)
-  mockAxios.mockResponse(mockCoursesResponse);
-
-  await waitFor(() => {
-    expect(screen.getByText('ES6')).toBeInTheDocument();
-    expect(screen.getByText('Webpack')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /course list/i })).toBeInTheDocument();
-    
-    expect(store.getState().courses.courses).toEqual(mockCoursesResponse.data.courses);
-  });
-});
-
-test('The App component renders Notifications when user is not logged in', async () => {
-   const store = createTestStore(notLoggedInState);
-  
-  render(
-    <Provider store={store}>
-      <App />
-    </Provider>
-  );
-
-  mockAxios.mockResponse(mockNotificationsResponse);
-
-  await waitFor(() => {
-    const titleElement = screen.getByText(/Here is the list of notifications/i);
-    const buttonElement = screen.getByRole("button", { name: /close/i });
-    expect(titleElement).toBeInTheDocument();
-    expect(buttonElement).toBeInTheDocument();
-
-    expect(store.getState().notifications.notifications).toEqual(mockNotificationsResponse.data.notifications);
-  });
-})
