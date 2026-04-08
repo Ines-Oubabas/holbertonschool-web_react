@@ -8,22 +8,22 @@ const styles = StyleSheet.create({
   courses: {
     margin: '130px auto',
     width: '90%',
-    height: '33vh'
+    height: '33vh',
   },
   table: {
     width: '100%',
     borderCollapse: 'collapse',
     border: '2px solid rgb(161, 161, 161)',
     ':nth-child(1n) th': {
-      border: '2px solid rgb(161, 161, 161)'
+      border: '2px solid rgb(161, 161, 161)',
     },
     ':nth-child(1n) tr': {
-      border: '2px solid rgb(161, 161, 161)'
+      border: '2px solid rgb(161, 161, 161)',
     },
     ':nth-child(1n) td': {
-      border: '2px solid rgb(161, 161, 161)'
-    }
-  }
+      border: '2px solid rgb(161, 161, 161)',
+    },
+  },
 });
 
 function CourseList() {
@@ -44,13 +44,13 @@ function CourseList() {
         <table id="CourseList" className={css(styles.table)}>
           <thead>
             <CourseListRow
-              textFirstCell="Available courses"
               isHeader={true}
+              textFirstCell="Available courses"
             />
             <CourseListRow
+              isHeader={true}
               textFirstCell="Course name"
               textSecondCell="Credit"
-              isHeader={true}
             />
           </thead>
           <tbody>
@@ -60,9 +60,9 @@ function CourseList() {
                 id={course.id}
                 textFirstCell={course.name}
                 textSecondCell={course.credit}
+                isSelected={course.isSelected}
                 onChangeRow={onChangeRow}
                 changeRow={onChangeRow}
-                isSelected={course.isSelected || false}
               />
             ))}
           </tbody>
