@@ -1,54 +1,41 @@
-import PropTypes from 'prop-types';
+import { StyleSheet, css } from 'aphrodite';
 
-CourseListRow.propTypes = {
-  isHeader: PropTypes.bool.isRequired,
-  textFirstCell: PropTypes.string.isRequired,
-  textSecondCell: PropTypes.string,
-};
+const styles = StyleSheet.create({
+  headerRow: {
+    backgroundColor: '#deb5b545'
+  },
+  row: {
+    backgroundColor: '#f5f5f5ab'
+  }
+});
 
 export default function CourseListRow({
   isHeader = false,
   textFirstCell = '',
   textSecondCell = null,
+  isSelected = false,
+  onChangeRow = () => {},
+  id,
 }) {
-  const cellStyle = isHeader 
-    ? { backgroundColor: 'white', opacity: 0.66 }
-    : { backgroundColor: 'white', opacity: 0.45 };
-  
-  const cellClasses = 'border border-gray-800';
-  
-  return isHeader ? (
-    <tr>
-      <th 
-        colSpan={textSecondCell ? 1 : 2}
-        className={cellClasses}
-        style={cellStyle}
-      >
-        {textFirstCell}
-      </th>
-      {textSecondCell ? (
-        <th 
-          className={cellClasses}
-          style={cellStyle}
-        >
-          {textSecondCell}
-        </th>
-      ) : null}
-    </tr>
-  ) : (
-    <tr>
-      <td 
-        className={`${cellClasses} pl-2`}
-        style={cellStyle}
-      >
-        {textFirstCell}
-      </td>
-      <td 
-        className={`${cellClasses} pl-2`}
-        style={cellStyle}
-      >
-        {textSecondCell}
-      </td>
-    </tr>
-  );
+  const rowStyle = isHeader ? styles.headerRow : styles.row;
+
+  return (
+    isHeader ? (
+      <tr className={css(rowStyle)}>
+        <th colSpan={textSecondCell ? 1 : 2}>{textFirstCell}</th>
+        {textSecondCell ? <th>{textSecondCell}</th> : null}
+      </tr>
+    ) : (
+      <tr className={css(rowStyle)}>
+        <td>
+          <input 
+            type="checkbox" 
+            checked={isSelected}
+            onChange={(event) => onChangeRow(id, event.target.checked)}
+            />
+        {textFirstCell}</td>
+        <td>{textSecondCell}</td>
+      </tr>
+    )
+  )
 }
