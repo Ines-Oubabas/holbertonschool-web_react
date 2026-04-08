@@ -2,11 +2,11 @@ import { StyleSheet, css } from 'aphrodite';
 
 const styles = StyleSheet.create({
   headerRow: {
-    backgroundColor: '#deb5b545'
+    backgroundColor: '#deb5b545',
   },
   row: {
-    backgroundColor: '#f5f5f5ab'
-  }
+    backgroundColor: '#f5f5f5ab',
+  },
 });
 
 export default function CourseListRow({
@@ -14,10 +14,22 @@ export default function CourseListRow({
   textFirstCell = '',
   textSecondCell = null,
   isSelected = false,
-  onChangeRow = () => {},
+  isChecked,
+  onChangeRow,
+  changeRow,
   id,
 }) {
   const rowStyle = isHeader ? styles.headerRow : styles.row;
+
+  const checkedValue =
+    typeof isChecked === 'boolean' ? isChecked : isSelected;
+
+  const handleChangeRow =
+    typeof onChangeRow === 'function'
+      ? onChangeRow
+      : typeof changeRow === 'function'
+      ? changeRow
+      : () => {};
 
   return isHeader ? (
     <tr className={css(rowStyle)}>
@@ -35,8 +47,8 @@ export default function CourseListRow({
       <td>
         <input
           type="checkbox"
-          checked={isSelected}
-          onChange={(event) => onChangeRow(id, event.target.checked)}
+          checked={checkedValue}
+          onChange={(event) => handleChangeRow(id, event.target.checked)}
         />
         {textFirstCell}
       </td>
