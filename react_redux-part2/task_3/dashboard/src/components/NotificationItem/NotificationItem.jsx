@@ -7,7 +7,6 @@ const NotificationItem = memo(function NotificationItem({
   id,
 }) {
   // this console.log is only for test purposes and not mentionned/required in the student code
-  // console.log(`Rendering NotificationItem with id: ${id}, type: ${type}, value: ${value}`);
   return (
     <li
       style={{ color: type === 'urgent' ? 'red' : 'blue' }}
