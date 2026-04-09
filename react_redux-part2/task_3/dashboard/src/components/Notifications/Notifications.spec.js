@@ -1,6 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import Notifications from "./Notifications";
-import { getLatestNotification } from "../../utils/utils";
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from '../../app/rootReducer';
@@ -25,9 +24,9 @@ const initialState = {
   },
   notifications: {
     notifications: [
-      { id: 1, type: 'default', value: 'New course available' },
-      { id: 2, type: 'urgent', value: 'New resume available' },
-      { id: 3, type: 'urgent', html: { __html: '<strong>Urgent requirement</strong> - complete by EOD' } }
+      { id: 1, type: 'default', isRead: false, value: 'New course available' },
+      { id: 2, type: 'urgent', isRead: false, value: 'New resume available' },
+      { id: 3, type: 'urgent', isRead: false, value: 'New project to review' }
     ],
   },
   courses: {
@@ -35,17 +34,7 @@ const initialState = {
   }
 };
 
-jest.mock("../../utils/utils", () => ({
-  getLatestNotification: jest.fn(),
-}));
-
 describe("Notifications component", () => {
-  beforeEach(() => {
-    getLatestNotification.mockReturnValue(
-      "<strong>Urgent requirement</strong> - complete by EOD"
-    );
-  });
-
   test('Verify that drawer visibility is set to hidden by default', () => {
     const store = createTestStore(initialState);
 
@@ -57,7 +46,7 @@ describe("Notifications component", () => {
 
     const drawer = screen.getByText(/Here is the list of notifications/i);
     const className = drawer.parentElement.className;
-    
+
     // Should only have base class (notificationItems), not visible class
     expect(className).toBeTruthy();
     expect(className.split(' ').length).toBe(1);
@@ -70,7 +59,7 @@ describe("Notifications component", () => {
       <Provider store={store}>
         <Notifications />
       </Provider>
-      );
+    );
 
     const drawer = screen.getByText(/Here is the list of notifications/i);
     const initialClassName = drawer.parentElement.className;
@@ -79,11 +68,11 @@ describe("Notifications component", () => {
     fireEvent.click(notificationTitle);
 
     const newClassName = drawer.parentElement.className;
-    
+
     // After clicking, className should be different (visible class added)
     expect(newClassName).not.toBe(initialClassName);
     expect(newClassName.length).toBeGreaterThan(initialClassName.length);
-});
+  });
 
   test('Verify that a notification marked as read is removed from the list', () => {
     const store = createTestStore(initialState);
@@ -93,7 +82,7 @@ describe("Notifications component", () => {
         <Notifications />
       </Provider>
     );
-    
+
     const listItems = screen.getAllByRole("listitem");
 
     fireEvent.click(listItems[0]);
