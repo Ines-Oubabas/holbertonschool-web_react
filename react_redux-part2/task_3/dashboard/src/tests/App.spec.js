@@ -38,9 +38,18 @@ const notLoggedInState = {
 const mockNotificationsResponse = {
   data: {
     notifications: [
-      { id: 1, type: 'default', value: 'New course available' },
-      { id: 2, type: 'urgent', value: 'New resume available' },
-      { id: 3, type: 'urgent', html: { __html: '<strong>Urgent requirement</strong> - complete by EOD' } }
+      {
+        id: 1,
+        context: { type: 'default', isRead: false, value: 'New course available' }
+      },
+      {
+        id: 2,
+        context: { type: 'urgent', isRead: false, value: 'New resume available' }
+      },
+      {
+        id: 3,
+        context: { type: 'urgent', isRead: false, value: 'New project to review' }
+      }
     ]
   }
 };
@@ -76,7 +85,7 @@ const isLoggedInState = {
 
 test('The App component renders Login by default (user not logged in)', async () => {
   const store = createTestStore(notLoggedInState);
-  
+
   render(
     <Provider store={store}>
       <App />
@@ -98,7 +107,7 @@ test('The App component renders Login by default (user not logged in)', async ()
 
 test('The App component renders Courses when user is logged in', async () => {
   const store = createTestStore(isLoggedInState);
-  
+
   render(
     <Provider store={store}>
       <App />
@@ -112,14 +121,19 @@ test('The App component renders Courses when user is logged in', async () => {
     expect(screen.getByText('ES6')).toBeInTheDocument();
     expect(screen.getByText('Webpack')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /course list/i })).toBeInTheDocument();
-    
+
     expect(store.getState().courses.courses).toEqual(mockCoursesResponse.data.courses);
   });
 });
 
 test('The App component renders Notifications when user is not logged in', async () => {
-   const store = createTestStore(notLoggedInState);
-  
+  const store = createTestStore(notLoggedInState);
+  const flattenedNotifications = [
+    { id: 1, type: 'default', isRead: false, value: 'New course available' },
+    { id: 2, type: 'urgent', isRead: false, value: 'New resume available' },
+    { id: 3, type: 'urgent', isRead: false, value: 'New project to review' }
+  ];
+
   render(
     <Provider store={store}>
       <App />
@@ -134,6 +148,7 @@ test('The App component renders Notifications when user is not logged in', async
     expect(titleElement).toBeInTheDocument();
     expect(buttonElement).toBeInTheDocument();
 
-    expect(store.getState().notifications.notifications).toEqual(mockNotificationsResponse.data.notifications);
+    console.log(mockNotificationsResponse.data.notifications)
+    expect(store.getState().notifications.notifications).toEqual(flattenedNotifications);
   });
 })
