@@ -14,13 +14,10 @@ export default function CourseListRow({
   textFirstCell = '',
   textSecondCell = null,
   isSelected = false,
-  onChangeRow = null,
-  changeRow = null,
+  onChangeRow = () => {},
   id,
 }) {
   const rowStyle = isHeader ? styles.headerRow : styles.row;
-
-  const handleRowChange = onChangeRow || changeRow || (() => {});
 
   if (isHeader) {
     return (
@@ -43,7 +40,7 @@ export default function CourseListRow({
         <input
           type="checkbox"
           checked={isSelected}
-          onChange={(event) => handleRowChange(id, event.target.checked)}
+          onChange={(event) => onChangeRow(id, event.target.checked)}
         />
         {textFirstCell}
       </td>
