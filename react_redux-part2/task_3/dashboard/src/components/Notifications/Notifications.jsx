@@ -1,9 +1,10 @@
-import { memo, useRef } from "react";
+import { memo, useRef, useState } from "react";
 import { StyleSheet, css } from "aphrodite";
 import closeIcon from "../../assets/close-icon.png";
 import NotificationItem from "../NotificationItem/NotificationItem";
 import { markNotificationAsRead } from '../../features/notifications/notificationsSlice'
 import { useDispatch, useSelector } from "react-redux";
+import { getFilteredNotifications } from "../../features/selectors/notificationSelector"
 
 const opacityKeyframes = {
   from: {
@@ -33,6 +34,8 @@ const styles = StyleSheet.create({
     padding: "5px",
     fontFamily: "Roboto, sans-serif",
     width: "25%",
+    maxHeight: "30vh",
+    overflowY: "auto",
     float: "right",
     marginTop: "20px",
     opacity: 0,
@@ -44,7 +47,7 @@ const styles = StyleSheet.create({
       width: "100%",
       height: "100%",
       border: "none",
-      padding: 0,
+      padding: "5px",
       margin: 0,
       fontSize: "20px",
       backgroundColor: "white",
@@ -94,7 +97,15 @@ const styles = StyleSheet.create({
 });
 
 const Notifications = memo(function Notifications() {
-  const { notifications, loading } = useSelector(state => state.notifications);
+  const { loading } = useSelector(state => state.notifications);
+  const [currentFilter, setCurrentFilter] = useState('all');
+  const filteredNotifications = useSelector(state => getFilteredNotifications(state, currentFilter));
+  const handleSetFilterUrgent = () => {
+    setCurrentFilter(currentFilter === "urgent" ? "all" : "urgent");
+  }
+  const handleSetFilterDefault = () => {
+    setCurrentFilter(currentFilter === "default" ? "all" : "default");
+  }
   const dispatch = useDispatch();
 
   const DrawerRef = useRef(null);
@@ -128,7 +139,7 @@ const Notifications = memo(function Notifications() {
         <div
           ref={DrawerRef}
           className={css(styles.notificationItems)}>
-          {notifications.length > 0 ? (
+          {filteredNotifications.length > 0 ? (
             <>
               <p className={css(styles.p)}>Here is the list of notifications</p>
               <button
@@ -138,14 +149,26 @@ const Notifications = memo(function Notifications() {
               >
                 <img src={closeIcon} alt="close icon" />
               </button>
+              <div>
+              <button
+                onClick={() => handleSetFilterUrgent()}
+                className='urgent'>
+                ‼️
+              </button>
+              <button
+                onClick={() => handleSetFilterDefault()}
+                className='default'
+              >
+                ??
+              </button>
+              </div>
               <ul className={css(styles.ul)}>
-                {notifications.map((notification) => (
+                {filteredNotifications.map((notification) => (
                   <NotificationItem
                     id={notification.id}
                     key={notification.id}
                     type={notification.type}
                     value={notification.value}
-                    html={notification.html}
                     markAsRead={handleMarkNotificationAsRead}
                   />
                 ))}
