@@ -7,9 +7,18 @@ afterEach(() => {
 
 const mockNotificationsResponse = {
   notifications: [
-    { id: 1, type: 'default', value: 'New course available' },
-    { id: 2, type: 'urgent', value: 'New resume available' },
-    { id: 3, type: 'urgent', html: { __html: '' } }
+    {
+      id: 1,
+      context: { type: 'default', isRead: false, value: 'New course available' }
+    },
+    {
+      id: 2,
+      context: { type: 'urgent', isRead: false, value: 'New resume available' }
+    },
+    {
+      id: 3,
+      context: { type: 'urgent', isRead: false, value: 'New project to review' }
+    }
   ]
 };
 
@@ -17,12 +26,10 @@ const initialState = {
   notifications: [],
 }
 
-const markedAsReadNotificationsResponse = {
-  notifications: [
-    { id: 2, type: 'urgent', value: 'New resume available' },
-    { id: 3, type: 'urgent', html: { __html: '' } }
-  ]
-};
+const markedAsReadNotificationsResponse = [
+  { id: 2, type: 'urgent', isRead: false, value: 'New resume available' },
+  { id: 3, type: 'urgent', isRead: false, value: 'New project to review' }
+];
 
 test("Returns the correct initial state by default", () => {
   const state = notificationsReducer(undefined, { type: 'unknown' });
@@ -56,14 +63,14 @@ test("fetches notifications data correctly", async () => {
   expect(Array.isArray(fulfilledAction.payload)).toBe(true);
   expect(fulfilledAction.payload.length).toBeGreaterThan(0);
 
-  // 8. Test that notification id 3 was updated with getLatestNotification()
-  const notificationId3 = fulfilledAction.payload.find(notif => notif.id === 3);
-  expect(notificationId3).toBeDefined();
-  expect(notificationId3.html.__html).toBe("<strong>Urgent requirement</strong> - complete by EOD");
+  // // 8. Test that notification id 3 was updated with getLatestNotification()
+  // const notificationId3 = fulfilledAction.payload.find(notif => notif.id === 3);
+  // expect(notificationId3).toBeDefined();
+  // expect(notificationId3.html.__html).toBe("<strong>Urgent requirement</strong> - complete by EOD");
 
   // 9. Test that other notifications (id 1 and 2) are still there unchanged
-  expect(fulfilledAction.payload[0]).toEqual({ id: 1, type: 'default', value: 'New course available' });
-  expect(fulfilledAction.payload[1]).toEqual({ id: 2, type: 'urgent', value: 'New resume available' });
+  expect(fulfilledAction.payload[0]).toEqual({ id: 1, type: 'default', isRead: false, value: 'New course available' },);
+  expect(fulfilledAction.payload[1]).toEqual({ id: 2, type: 'urgent', isRead: false, value: 'New resume available' });
 })
 
 test('Handle fetchNotifications.pending correctly', () => {
@@ -77,28 +84,29 @@ test('Handle fetchNotifications.pending correctly', () => {
 })
 
 test('State.notifications is correctly updated when fetchNotifications succeeds', () => {
-  const mockNotifications = [
-    { id: 1, value: 'notification 1' },
-    { id: 2, value: 'notification 2' },
-    { id: 3, type: 'urgent', html: { __html: 'It\'s an emergency!' } }
+  const flattenedNotifications = [
+    { id: 1, type: 'default', isRead: false, value: 'New course available' },
+    { id: 2, type: 'urgent', isRead: false, value: 'New resume available' },
+    { id: 3, type: 'urgent', isRead: false, value: 'New project to review' }
   ];
+
 
   const action = {
     type: fetchNotifications.fulfilled.type,
-    payload: mockNotifications
+    payload: flattenedNotifications
   };
 
   const newState = notificationsReducer(initialState, action);
 
-  expect(newState.notifications).toEqual(mockNotifications);
+  expect(newState.notifications).toEqual(flattenedNotifications);
   expect(newState.notifications).toHaveLength(3);
   expect(newState.notifications).not.toEqual([]);
 });
 
 test('should verify payload contains expected notification structure', async () => {
   const mockNotifications = [
-    { id: 1, type: 'default', value: 'Not important' },
-    { id: 2, type: 'urgent', value: 'Very important' }
+    { id: 1, context: { type: 'default', isRead: false, value: 'Not important' } },
+    { id: 2, context: { type: 'urgent', isRead: false, value: 'Very important' } }
   ];
 
   const dispatch = jest.fn();
@@ -110,25 +118,59 @@ test('should verify payload contains expected notification structure', async () 
 
   const fulfilledAction = dispatch.mock.calls[1][0];
 
-  expect(fulfilledAction.payload).toHaveLength(3);
+  expect(fulfilledAction.payload).toHaveLength(2);
   expect(fulfilledAction.payload.length).toBeGreaterThan(0);
   expect(Array.isArray(fulfilledAction.payload)).toBe(true);
 
-  const notificationId3 = fulfilledAction.payload.find(notif => notif.id === 3);
-  expect(notificationId3).toBeDefined();
-  expect(notificationId3.html.__html).toBe("<strong>Urgent requirement</strong> - complete by EOD");
-
-  expect(fulfilledAction.payload[0]).toEqual({ id: 1, type: 'default', value: 'Not important' });
-  expect(fulfilledAction.payload[1]).toEqual({ id: 2, type: 'urgent', value: 'Very important' });
+  expect(fulfilledAction.payload[0]).toEqual({ id: 1, type: 'default', isRead: false, value: 'Not important' });
+  expect(fulfilledAction.payload[1]).toEqual({ id: 2, type: 'urgent', isRead: false, value: 'Very important' });
 });
 
 test("Removes a notification correctly when the markNotificationAsRead action is dispatched", () => {
   const previousState = {
-    notifications: mockNotificationsResponse.notifications
+    notifications: [
+      { id: 1, type: 'default', isRead: false, value: 'New course available' },
+      { id: 2, type: 'urgent', isRead: false, value: 'New resume available' },
+      { id: 3, type: 'urgent', isRead: false, value: 'New project to review' }
+    ]
   }
   const action = markNotificationAsRead(1);
   const newState = notificationsReducer(previousState, action);
 
-  expect(newState.notifications).toStrictEqual(markedAsReadNotificationsResponse.notifications);
+  expect(newState.notifications).toStrictEqual(markedAsReadNotificationsResponse);
 })
 
+test("handle fetchNotifications.fulfilled when the API request is successful, and only render the unread notification items", async () => {
+  const mockReadNotificationsResponse = {
+    notifications: [
+      {
+        id: 1,
+        context: { type: 'default', isRead: true, value: 'New course available' }
+      },
+      {
+        id: 2,
+        context: { type: 'urgent', isRead: false, value: 'New resume available' }
+      },
+      {
+        id: 3,
+        context: { type: 'urgent', isRead: false, value: 'New project to review' }
+      }
+    ]
+  };
+
+  const dispatch = jest.fn();
+  const getState = jest.fn();
+
+  const promise = fetchNotifications()(dispatch, getState, null);
+  mockAxios.mockResponse({ data: mockReadNotificationsResponse });
+  await promise;
+
+  const fulfilledAction = dispatch.mock.calls[1][0];
+
+  expect(fulfilledAction.payload).toHaveLength(2);
+  expect(fulfilledAction.payload.length).toBeGreaterThan(0);
+  expect(Array.isArray(fulfilledAction.payload)).toBe(true);
+
+  expect(fulfilledAction.payload[0]).toEqual({ id: 2, type: 'urgent', isRead: false, value: 'New resume available' });
+  expect(fulfilledAction.payload[1]).toEqual({ id: 3, type: 'urgent', isRead: false, value: 'New project to review' });
+});
