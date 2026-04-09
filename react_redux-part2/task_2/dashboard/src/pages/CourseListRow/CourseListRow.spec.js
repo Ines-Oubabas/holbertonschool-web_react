@@ -85,8 +85,8 @@ test('checkbox should be unchecked when isSelected is false', () => {
 
 });
 
-test('changeRow is called with correct parameters when checkbox is clicked', () => {
-  const mockChangeRow = jest.fn();
+test('onChangeRow is called with correct parameters when checkbox is clicked', () => {
+  const mockOnChangeRow = jest.fn();
 
   render(
     <table>
@@ -94,7 +94,7 @@ test('changeRow is called with correct parameters when checkbox is clicked', () 
         <CourseListRow
           id={1}
           isSelected={false}
-          changeRow={mockOnChangeRow}
+          onChangeRow={mockOnChangeRow}
           textFirstCell="data1"
           textSecondCell="data2"
         />
