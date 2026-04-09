@@ -85,25 +85,26 @@ test('checkbox should be unchecked when isSelected is false', () => {
 
 });
 
-test('changeRow is called with correct parameters when checkbox is clicked', () => {
-  const mockChangeRow = jest.fn();
+test('onChangeRow is called with correct parameters when checkbox is clicked', () => {
+  const mockOnChangeRow = jest.fn();
 
-  render(
+render(
     <table>
       <tbody>
         <CourseListRow
           id={1}
           isSelected={false}
-          changeRow={mockChangeRow}
-          textFirstCell="data1"
-          textSecondCell="data2"
+          onChangeRow={mockOnChangeRow}
+          textFirstCell={'data1'}
+          textSecondCell={'data2'}
         />
       </tbody>
     </table>
   );
 
+
   const checkbox = screen.getByRole('checkbox');
   fireEvent.click(checkbox);
-
-  expect(mockChangeRow).toHaveBeenCalledWith(1, true);
+  
+  expect(mockOnChangeRow).toHaveBeenCalledWith(1, true);
 });
