@@ -1,11 +1,9 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import Notifications from "./Notifications";
+import { render, screen, fireEvent } from '@testing-library/react';
+import Notifications from './Notifications';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from '../../app/rootReducer';
 
-
-// Helper function to create a fresh store with custom initial state
 const createTestStore = (preloadedState) => {
   return configureStore({
     reducer: rootReducer,
@@ -13,28 +11,28 @@ const createTestStore = (preloadedState) => {
   });
 };
 
-// Default initial states for auth (not logged in)
 const initialState = {
   auth: {
     isLoggedIn: false,
     user: {
-      email: "",
-      password: "",
-    }
+      email: '',
+      password: '',
+    },
   },
   notifications: {
     notifications: [
       { id: 1, type: 'default', isRead: false, value: 'New course available' },
       { id: 2, type: 'urgent', isRead: false, value: 'New resume available' },
-      { id: 3, type: 'urgent', isRead: false, value: 'New project to review' }
+      { id: 3, type: 'urgent', isRead: false, value: 'New project to review' },
     ],
+    loading: false,
   },
   courses: {
-    courses: []
-  }
+    courses: [],
+  },
 };
 
-describe("Notifications component", () => {
+describe('Notifications component', () => {
   test('Verify that drawer visibility is set to hidden by default', () => {
     const store = createTestStore(initialState);
 
@@ -47,7 +45,6 @@ describe("Notifications component", () => {
     const drawer = screen.getByText(/Here is the list of notifications/i);
     const className = drawer.parentElement.className;
 
-    // Should only have base class (notificationItems), not visible class
     expect(className).toBeTruthy();
     expect(className.split(' ').length).toBe(1);
   });
@@ -69,7 +66,6 @@ describe("Notifications component", () => {
 
     const newClassName = drawer.parentElement.className;
 
-    // After clicking, className should be different (visible class added)
     expect(newClassName).not.toBe(initialClassName);
     expect(newClassName.length).toBeGreaterThan(initialClassName.length);
   });
@@ -83,10 +79,43 @@ describe("Notifications component", () => {
       </Provider>
     );
 
-    const listItems = screen.getAllByRole("listitem");
-
+    const listItems = screen.getAllByRole('listitem');
     fireEvent.click(listItems[0]);
 
     expect(store.getState().notifications.notifications).toHaveLength(2);
-  })
+  });
+
+  test('Verify that urgent filter only displays urgent notifications', () => {
+    const store = createTestStore(initialState);
+
+    render(
+      <Provider store={store}>
+        <Notifications />
+      </Provider>
+    );
+
+    const urgentButton = screen.getByText('!!');
+    fireEvent.click(urgentButton);
+
+    expect(screen.queryByText('New course available')).not.toBeInTheDocument();
+    expect(screen.getByText('New resume available')).toBeInTheDocument();
+    expect(screen.getByText('New project to review')).toBeInTheDocument();
+  });
+
+  test('Verify that default filter only displays default notifications', () => {
+    const store = createTestStore(initialState);
+
+    render(
+      <Provider store={store}>
+        <Notifications />
+      </Provider>
+    );
+
+    const defaultButton = screen.getByText('??');
+    fireEvent.click(defaultButton);
+
+    expect(screen.getByText('New course available')).toBeInTheDocument();
+    expect(screen.queryByText('New resume available')).not.toBeInTheDocument();
+    expect(screen.queryByText('New project to review')).not.toBeInTheDocument();
+  });
 });
